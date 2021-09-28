@@ -114,7 +114,7 @@ Here's the complete circuit diagram of the system.
 
 ## Server Details <a name = "server"></a>
 
-<h3 style="color:orange">[THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]</h3>
+- ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `[THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]`
 
 ### Monitoring
 
