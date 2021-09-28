@@ -114,7 +114,9 @@ Here's the complete circuit diagram of the system.
 
 ## Server Details <a name = "server"></a>
 
-- ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) `[THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]`
+```diff 
+- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
+```` 
 
 ### Monitoring
 
@@ -145,8 +147,9 @@ Here's the complete circuit diagram of the system.
 - Backend is based on NodeJS and it is being managed by PM2. It starts automatically on server start.
 
 ## MQTT Topic Details <a name = "mqtt"></a>
-<h3 style="color:orange">[THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]</h3>
-
+```diff 
+- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
+```` 
 ### Topics List
 #### Logs
 1.  <span style="color: green">smart-agri/logs</span> `(all log messages are published to this topic) READ-ONLY`
@@ -163,7 +166,9 @@ Here's the complete circuit diagram of the system.
 
 
 ## API Details <a name = "api"></a>
-<h3 style="color:orange">[THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]</h3>
+```diff 
+- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
+```` 
 
 
 <!-- ### Admin Login
@@ -232,7 +237,9 @@ POST http://34.214.65.82:8080/v1/addNewDevice
 
 
 ### Responses
-<h3 style="color:orange">[THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]</h3>
+```diff 
+- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
+```` 
 
 Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, Gophish returns a JSON response in the following format:
 
