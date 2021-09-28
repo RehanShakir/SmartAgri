@@ -3,6 +3,8 @@
 #include "webApp.h"    //Captive Portal webpages
 #include <FS.h>        //ESP32 File System
 #include "commHandler.h"
+#include "BMEHandler.h"
+#include "soilMoistureHandler.h"
 IPAddress ipV(192, 168, 4, 1);
 String loadParams(AutoConnectAux &aux, PageArgument &args) //function to load saved settings
 {
@@ -98,6 +100,8 @@ void setup() //main setup functions
 {
     Serial.begin(115200);
     setupCommsHandler();
+    setupBME280();
+    setupSoilMoisture();
     delay(1000);
 
     if (!MDNS.begin("esp32")) //starting mdns so that user can access webpage using url `esp32.local`(will not work on all devices)
@@ -180,7 +184,8 @@ void setup() //main setup functions
     Serial.print("Password: ");
     Serial.println(apPass);
     config.title = "Smart Agri Device"; //set title of webapp
-
+    Serial.print("Device Hostname: ");
+    Serial.println(hostName);
     //add different tabs on homepage
 
     //  portal.disableMenu(AC_MENUITEM_DISCONNECT);
@@ -224,19 +229,10 @@ void loop()
 
     if (millis() - lastPub > updateInterval) //publish data to mqtt server
     {
-        mqttPublish("smart-agri/" + String(hostName), String("Data")); //publish data to mqtt broker
+        mqttPublish("smart-agri/" + String(hostName) + String("bme280/"), String(getBMEVal()));             //publish data to mqtt broker
+        mqttPublish("smart-agri/" + String(hostName) + String("npk/"), String(getNPK()));                   //publish data to mqtt broker
+        mqttPublish("smart-agri/" + String(hostName) + String("soilMoisture/"), String(getSoilMoisture())); //publish data to mqtt broker
         ledState(ACTIVE_MODE);
-        //uncomment the lines below for debugging
-        // Serial.println(ampSensorType);
-        // Serial.println(sensorSelection);
-        // Serial.println(minActiveValue);
-        // Serial.println(channelId);
-        // Serial.println(userKey);
-        // Serial.println(apiKey);
-        // Serial.println(apid);
-        // Serial.println(hostName);
-        // Serial.println(apPass);
-        // Serial.println(tempUnits)
 
         lastPub = millis();
     }

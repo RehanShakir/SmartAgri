@@ -78,7 +78,7 @@ String mac = (WiFi.macAddress());
 char __mac[sizeof(mac)];
 
 const char *mqtt_server = "broker.hivemq.com";
-IPAddress mqttBroker(34,214,65,82);
+//IPAddress mqttBroker(34,214,65,82);
 const int mqtt_port = 1883;
 const char *mqtt_user = "testUser";
 const char *mqtt_pass = "testUser@123";

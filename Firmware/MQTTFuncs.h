@@ -101,7 +101,7 @@ bool mqttConnect()
         if (String(mqtt_server).length() <= 0)
             break;
 
-        mqttClient.setServer(mqttBroker, 1883);
+        mqttClient.setServer(mqtt_server, 1883);
         mqttClient.setCallback(callback);
         Serial.println(String("Attempting MQTT broker:") + String("smart-agri Broker"));
         internetStatus = "Connecting...";
