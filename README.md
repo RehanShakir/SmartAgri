@@ -296,39 +296,23 @@ Dashboard Profile Page![SCRD3](Circuit/scrd3.png)
 Following components are used to make this project
 
 1.  ESP32 Dev Module
-    ○ https://www.amazon.com/ESP32-WROOM-32-Development-ESP-32S-Bluetoot
-    h-Arduino/dp/B084KWNMM4/ref=sr_1_10?dchild=1&keywords=esp32+dev+
-    module&qid=1631286335&sr=8-10
+    ○ https://www.amazon.com/ESP32-WROOM-32-Development-ESP-32S-Bluetooth-Arduino/dp/B084KWNMM4/ref=sr_1_10?dchild=1&keywords=esp32+dev+module&qid=1631286335&sr=8-10
 2.  Atmospheric Temperature and Humidity Sensor (BME280)
-    ○ https://www.amazon.com/HiLetgo-Temperature-Humidity-Electronic-Practice
-    /dp/B0795F19W6/ref=sr_1_2?dchild=1&keywords=dht22&qid=1631286498&s
-    r=8-2
+    ○ https://www.amazon.com/HiLetgo-Temperature-Humidity-Electronic-Practice/dp/B0795F19W6/ref=sr_1_2?dchild=1&keywords=dht22&qid=1631286498&sr=8-2
 3.  Capacitive Soil Moisture Sensor
-    ○ https://www.amazon.com/Icstation-Resistive-Soil-Moisture-Sensor/dp/B076D
-    DWDJK/ref=sr_1_7?dchild=1&keywords=soil+moisture+sensor&qid=1631286
-    644&sr=8-7
+    ○ https://www.amazon.com/Icstation-Resistive-Soil-Moisture-Sensor/dp/B076DDWDJK/ref=sr_1_7?dchild=1&keywords=soil+moisture+sensor&qid=1631286644&sr=8-7
 4.  NPK Sensor
-    ○ https://www.amazon.com/Neufday-Precision-Nutrient-Intelligent-Fertilizer/d
-    p/B0836WYNJ1/ref=sr_1_2?dchild=1&keywords=soil+npk+sensor&qid=16312
-    86692&sr=8-2
+    ○ https://www.amazon.com/Neufday-Precision-Nutrient-Intelligent-Fertilizer/dp/B0836WYNJ1/ref=sr_1_2?dchild=1&keywords=soil+npk+sensor&qid=1631286692&sr=8-2
 5.  TTL to RS485 Converter
     ○ https://www.amazon.com/HiLetgo-Reciprocal-Hardware-Automatic-Converter/dp/B082Y19KV9/ref=sr_1_2?crid=1GFISE1RJQ65Z&dchild=1&keywords=ttl+to+rs485+converter&qid=1632822148&sprefix=ttl+to+rs485+co%2Caps%2C728&sr=8-2
 6.  Soil pH Sensor
-    ○ https://www.amazon.com/Taidacent-Detector-Agricultural-Phosphorus-Potas
-    sium/dp/B08MXVSKG9/ref=sr_1_1?dchild=1&keywords=soil%2Bph%2Bsensor
-    &qid=1631286952&sr=8-1&th=1
+    ○ https://www.amazon.com/Taidacent-Detector-Agricultural-Phosphorus-Potassium/dp/B08MXVSKG9/ref=sr_1_1?dchild=1&keywords=soil%2Bph%2Bsensor&qid=1631286952&sr=8-1&th=1
 7.  Soil EC Sensor
-    ○ https://www.amazon.com/Taidacent-Detector-Agricultural-Phosphorus-Potas
-    sium/dp/B08MXVSKG9/ref=sr_1_1?dchild=1&keywords=soil%2Bph%2Bsensor
-    &qid=1631286952&sr=8-1&th=1
+    ○ https://www.amazon.com/Taidacent-Detector-Agricultural-Phosphorus-Potassium/dp/B08MXVSKG9/ref=sr_1_1?dchild=1&keywords=soil%2Bph%2Bsensor&qid=1631286952&sr=8-1&th=1
 8.  9V 5A Adapter
-    ○ https://www.amazon.com/Supply-Adapter-Converter-Regulator-Monitor/dp/
-    B0888DQ343/ref=sr_1_4?dchild=1&keywords=9v+5a+dc+adapter&qid=16312
-    87139&sr=8-4
+    ○ https://www.amazon.com/Supply-Adapter-Converter-Regulator-Monitor/dp/B0888DQ343/ref=sr_1_4?dchild=1&keywords=9v+5a+dc+adapter&qid=1631287139&sr=8-4
 9.  9V to 5V Buck Converter
-    ○ https://www.amazon.com/UCTRONICS-Converter-Transformer-Voltage-Regul
-    ator/dp/B07XXWQ49N/ref=sr_1_1?dchild=1&keywords=9v+to+5v+step+down
-    +converter&qid=1631287177&sr=8-1
+    ○ https://www.amazon.com/UCTRONICS-Converter-Transformer-Voltage-Regulator/dp/B07XXWQ49N/ref=sr_1_1?dchild=1&keywords=9v+to+5v+step+down+converter&qid=1631287177&sr=8-1
 
 
 ## ⛏️ Built Using <a name = "built_using"></a>
