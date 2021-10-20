@@ -3,11 +3,12 @@ const express = require("express");
 const router = express.Router();
 const mqttMessgae = require("../../models/mqttmessage");
 
-const host = "broker.hivemq.com";
+const topic = "data/#";
+const host = "34.214.65.82";
 const port = "1883";
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 const connectUrl = `mqtt://${host}:${port}`;
-
+//Get all Devices Data
 router.get("/", async (req, res) => {
   try {
     let mqttMessgaes = await mqttMessgae.find();
@@ -15,6 +16,18 @@ router.get("/", async (req, res) => {
     res.send(mqttMessgaes);
   } catch (err) {
     console.log(err);
+  }
+});
+
+//To Get one Device Data using MacAddress
+router.get("/getOne", async (req, res) => {
+  try {
+    let mqttMessgaes = await mqttMessgae.find({
+      macAddress: req.body.macAddress,
+    });
+    return res.send(mqttMessgaes);
+  } catch (err) {
+    res.status(400).send(err.message);
   }
 });
 router.post("/", async (req, res) => {
@@ -28,7 +41,6 @@ router.post("/", async (req, res) => {
       reconnectPeriod: 1000000,
     });
 
-    const topic = req.body.macAddress;
     client.on("connect", () => {
       console.log("Connected");
       client.subscribe([topic], () => {
@@ -40,8 +52,10 @@ router.post("/", async (req, res) => {
       let message = JSON.parse(payload);
       console.log("Received Message:", topic, message);
 
+      const macAdrs = topic.split("/");
+
       let MqttMessgae = new mqttMessgae({
-        macAddress: req.body.macAddress,
+        macAddress: macAdrs[1],
         FW_Version: message.FW_Version,
         Environment: message.Environment[0],
         Soil_Parameters: message.SoilParameters[0],
