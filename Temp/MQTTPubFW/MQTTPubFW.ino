@@ -25,10 +25,10 @@
 
 // Update these with values suitable for your network.
 
-const char* ssid = "3STechLabs";
-const char* password = "%@3stech@nauman%";
+const char* ssid = "hotspot2";
+const char* password = "abc123098a#";
 const char* mqtt_server = "broker.hivemq.com";
-
+IPAddress ip(34,214,65,82);
 WiFiClient espClient;
 PubSubClient client(espClient);
 unsigned long lastMsg = 0;
@@ -115,7 +115,7 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
   Serial.begin(115200);
   setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  client.setServer(ip, 1883);
   client.setCallback(callback);
 }
 
@@ -148,12 +148,12 @@ void loop() {
   client.loop();
 
   unsigned long now = millis();
-  if (now - lastMsg > 1000) {
+  if (now - lastMsg > (60*1000)) {
     lastMsg = now;
   
     genJSON();
     serializeJson(doc, jsonDoc);
-    String topicP=myMac+String("/data");
+    String topicP=String("data/")+myMac;
     Serial.print("Publishing on: ");
     Serial.println(topicP);
     client.publish(topicP.c_str(), jsonDoc);
@@ -161,5 +161,3 @@ void loop() {
     
   }
 }
-
-

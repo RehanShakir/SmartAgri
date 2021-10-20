@@ -103,11 +103,6 @@ Here's the complete circuit diagram of the system.
 ![CircuitDiagram](Circuit/Circuit_bb.png)
 
 ## Server Details <a name = "server"></a>
-
-```diff
-- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
-```
-
 ### Monitoring
 
 - pm2 list
@@ -119,6 +114,7 @@ Here's the complete circuit diagram of the system.
 - NodeJS, NPM, Node, NVM
 - PM2
 - ufw
+- Caprover
 - mongod
 - mongo-express
 
@@ -139,9 +135,6 @@ Here's the complete circuit diagram of the system.
 
 ## MQTT Topic Details <a name = "mqtt"></a>
 
-```diff
-- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
-```
 
 ### Topics List
 
@@ -153,92 +146,87 @@ Here's the complete circuit diagram of the system.
 
 1.  <span style="color: green">smart-agri/deviceExists</span> `(Publish DeviceMAC on this topic to check if device exisits in DB) WRITE-ONLY`
     1.  <span style="color: green">smart-agri/deviceExistance</span> `(Response from the above command {null or device MAC}) READ-ONLY`
-2.
-3.  <span style="color: green">smart-agri/createNew</span> `(Publish data to create a new device in DB.) WRITE-ONLY`
 
-
-    - Data Format: DeviceMAC;SENSORS_LIST
-
-4.  <span style="color: green">smart-agri/updateDevice</span> `(Publish data to update a device in DB based on its MAC Address.) WRITE-ONLY`
-    - Data Format: DeviceMAC;SENSORS_LIST
+2.  <span style="color: green">data/MAC_ADDRESS</span> `(Publish data to update a device in DB based on its MAC Address.) WRITE-ONLY`
+    - Data Format: 
+        ```JSON
+        {
+        "_id":"616fb42d27d2b5351d8a013e",
+        "macAddress":"240AC4AFDBDB9C",
+        "FW_Version":"v1.0",
+        "Environment":
+        [
+            {
+                "Temperautre":12.1,
+                "Humidity":54,
+                "Atmospheric_Pressure":37.78,
+                "_id":"616fb42d27d2b5351d8a013f"
+            }
+        ],
+        "Soil_Parameters":
+        [
+            {
+                "Soil_Moisture":5.44,
+                "EC":87.52,
+                "pH":47.31,
+                "Nitrogen":54.64,
+                "Phosphorus":97.13,
+                "Potassium":51.03,
+                "_id":"616fb42d27d2b5351d8a0140"
+            }
+        ],
+        "createdAt":"2021-10-20T06:16:13.901Z",
+        "updatedAt":"2021-10-20T06:16:13.901Z",
+        "__v":0
+        }
+        ```
 
 ## API Details <a name = "api"></a>
 
-```diff
-- Routes
-*   /api/users
-*   /api/mqtt
-```
-
-<!-- ### Admin Login
+### Live Sensor Nodes
 
 ```http
-POST http://34.214.65.82:8080/v1/loginAdmin
+POST http://sensors.production.rehanshakir.com/api/mqtt
 ```
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `Email` | `string` | **Required**.  *Email address of the admin*|
-| `Password` | `string` | **Required**.  *Password of the admin*|
+| Parameter | Type      | Description |
+| :-------- | :-------- | :---------- |
+| `nothing` | `nothing` | nothing     |
 
-### Update Admin
+-   Returns the list of live sensor nodes
+
+### Users Register
+
 
 ```http
-POST http://34.214.65.82:8080/v1/updateAdmin
+POST http://sensors.production.rehanshakir.com/api/users/register
 ```
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `Email` | `string` | **Required**.  *Email address of the admin*|
-| `Password` | `string` | **Required**.  *Password of the admin*|
+| Parameter  | Type            | Description                              |
+| :--------- | :-------------- | :--------------------------------------- |
+| `email`    | `email address` | **required** enter a valid email address |
+| `password` | `password`      | **required** enter a password            |
 
-### List Admins
+-   User registration
+
+
+### Users Register
+
 
 ```http
-GET http://34.214.65.82:8080/v1/listAll
+POST http://sensors.production.rehanshakir.com/api/users/login
 ```
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-```nothing```
+| Parameter  | Type            | Description                              |
+| :--------- | :-------------- | :--------------------------------------- |
+| `email`    | `email address` | **required** enter a valid email address |
+| `password` | `password`      | **required** enter a password            |
 
-### Ledger Log
-
-```http
-POST http://34.214.65.82:8080/v1/ledgerLog
-```
-
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-```nothing```
-
-### Add New Device
-
-```http
-POST http://34.214.65.82:8080/v1/addNewDevice
-```
-
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `DeviceMAC` | `string` | **Required**.  *Email address of the Device*|
-| `StartSession` | `string` | **Required**.  *StartSession of the Device*|
-| `EndSession` | `string` | **Required**.  *EndSession of the Device*|
-| `EndSessionType` | `string` | **Required**.  *EndSessionType of the Device*|
-| `Temperature` | `string` | **Required**.  *Temperature of the Device*|
-| `SensorFilters` | `string` | **Required**.  *SensorFilters of the Device*|
-| `LampMaintenance` | `string` | **Required**.  *LampMaintenance of the Device*|
-| `AnnualMaintenance` | `string` | **Required**.  *AnnualMaintenance of the Device*|
-| `PowerFactorCorrection` | `string` | **Required**.  *PowerFactorCorrection of the Device*|
-| `AnemometerSensor` | `string` | **Required**.  *AnemometerSensor of the Device*|
-| `InputVoltage` | `string` | **Required**.  *InputVoltage of the Device*|
-| `PresencePhases` | `string` | **Required**.  *PresencePhases of the Device*|
-| `Timestamp` | `string` | **NOT Required**.  *Timestamp of the Device*| -->
+-   User login
 
 ### Responses
 
-```diff
-- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
-```
+
 
 Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, Gophish returns a JSON response in the following format:
 
@@ -255,7 +243,7 @@ The `status` attribute describes if the transaction was successful or not.
 
 ### Status Codes
 
-IoTManagementSystem Backend returns the following status codes in its API:
+SmartAgri Backend returns the following status codes in its API:
 
 | Status Code | Description             |
 | :---------- | :---------------------- |
