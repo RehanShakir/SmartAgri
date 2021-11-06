@@ -1,5 +1,6 @@
 import "../assets/styles/main.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useHistory } from "react";
+import history from "../utils/CreateBrowserHistory";
 
 import smartAgri from "../api/smartAgri";
 import { Row, Col, Card, Table, Typography, Input } from "antd";
@@ -14,6 +15,9 @@ const Tables = () => {
   const [macAddress, setMacAddress] = useState("");
 
   useEffect(() => {
+    if (localStorage.getItem("user-info")) {
+      history.push("/tables");
+    }
     console.log("In USE");
     const agriData = () => {
       smartAgri
@@ -32,7 +36,7 @@ const Tables = () => {
     };
     agriData();
     // console.log(data);
-  }, [data]);
+  }, []);
 
   // const mappedData = data.map((d) => {
   //   return d.Environment[0];

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import smartAgri from "../api/smartAgri";
+import history from "../utils/CreateBrowserHistory";
 import {
   Layout,
   Button,
@@ -28,7 +29,11 @@ const SignIn = () => {
       })
       .then((res) => {
         console.log("Logged in successfully");
-        console.log(res);
+        localStorage.setItem("user-info", JSON.stringify(res.data));
+
+        history.push("/");
+
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);

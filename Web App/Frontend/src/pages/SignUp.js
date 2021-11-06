@@ -1,4 +1,5 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
+
 import smartAgri from "../api/smartAgri";
 import {
   Layout,
@@ -14,7 +15,8 @@ import logo1 from "../assets/images/logos-facebook.svg";
 import logo2 from "../assets/images/logo-apple.svg";
 import logo3 from "../assets/images/Google__G__Logo.svg.png";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import history from "../utils/CreateBrowserHistory";
 import {
   DribbbleOutlined,
   TwitterOutlined,
@@ -109,7 +111,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const onFinish = (values) => {
+  const onFinish = () => {
     smartAgri
       .post("/api/users/register", {
         email: email,
@@ -118,6 +120,9 @@ const SignUp = () => {
       })
       .then((res) => {
         console.log("Signed Up Successfully!");
+        localStorage.setItem("user-info", JSON.stringify(res));
+        history.push("/tables");
+
         console.log(res);
       })
       .catch((err) => {
