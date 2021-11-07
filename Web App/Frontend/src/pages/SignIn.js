@@ -96,14 +96,14 @@ const SignIn = () => {
                   <Input placeholder="Password" />
                 </Form.Item>
 
-                <Form.Item
+                {/* <Form.Item
                   name="remember"
                   className="aligin-center"
                   valuePropName="checked"
                 >
                   <Switch defaultChecked onChange={onChange} />
                   Remember me
-                </Form.Item>
+                </Form.Item> */}
 
                 <Form.Item>
                   <Button

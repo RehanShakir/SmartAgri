@@ -11,7 +11,7 @@
 */
 import { Switch, Route, Router, Redirect } from "react-router-dom";
 // import Home from "./pages/Home";
-import Tables from "./pages/Data";
+import Data from "./pages/Data";
 // import Billing from "./pages/Billing";
 // import Rtl from "./pages/Rtl";
 // import Profile from "./pages/Profile";
@@ -31,7 +31,7 @@ function App() {
         <Main>
           {/* <Route exact path="/dashboard" component={Home} /> */}
           {/* <Route exact path="/tables" component={Tables} /> */}
-          <ProtectedRoutes Cmp={Tables} />
+          <ProtectedRoutes Cmp={Data} />
           {/* <Route exact path="/billing" component={Billing} /> */}
           {/* <Route exact path="/rtl" component={Rtl} /> */}
           {/* <Route exact path="/profile" component={Profile} /> */}

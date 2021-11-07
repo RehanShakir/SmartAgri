@@ -9,7 +9,7 @@ import { SearchOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
-const Tables = () => {
+const Data = () => {
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState(5);
   const [macAddress, setMacAddress] = useState("");
@@ -22,12 +22,12 @@ const Tables = () => {
     const agriData = () => {
       smartAgri
         .post("/api/mqtt/getOne", {
-          macAddress: macAddress,
+          macAddress,
         })
         .then((res) => {
           console.log("Sucess");
           setData(res.data);
-          // console.log(res.data);
+          //console.log(res.data);
           // console.log(data);
         })
         .catch((err) => {
@@ -36,7 +36,7 @@ const Tables = () => {
     };
     agriData();
     // console.log(data);
-  }, []);
+  }, [macAddress]);
 
   // const mappedData = data.map((d) => {
   //   return d.Environment[0];
@@ -152,4 +152,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default Data;

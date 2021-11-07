@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import smartAgri from "../api/smartAgri";
 import {
@@ -11,18 +11,9 @@ import {
   Input,
   Checkbox,
 } from "antd";
-import logo1 from "../assets/images/logos-facebook.svg";
-import logo2 from "../assets/images/logo-apple.svg";
-import logo3 from "../assets/images/Google__G__Logo.svg.png";
 
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import history from "../utils/CreateBrowserHistory";
-import {
-  DribbbleOutlined,
-  TwitterOutlined,
-  InstagramOutlined,
-  GithubOutlined,
-} from "@ant-design/icons";
 
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
@@ -144,15 +135,14 @@ const SignUp = () => {
 
         <Content className="p-0">
           <div className="sign-up-header">
-            <div className="content">
-              <Title>Sign Up</Title>
-            </div>
+            <Title style={{ color: "white" }}>Sign Up</Title>
           </div>
 
           <Card
-            className="card-signup header-solid h-full ant-card pt-0"
+            className="card-signup header-solid h-full ant-card pt-0 card-my"
             title={<h5>Register</h5>}
             bordered="false"
+            style={{ marginTop: 50 }}
           >
             <Form
               name="basic"
