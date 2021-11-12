@@ -1,14 +1,16 @@
 //FOR LIVE SERVER CAPROVER Uncomment it
-
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb://srv-captain--sensors-db/mydatabase?authSource=admin", {
-    user: "sensorsdb",
-    pass: "sensorsdb",
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb://srv-captain--smart-agri-database/mydatabase?authSource=admin",
+    {
+      user: "smartAgriDatabase",
+      pass: "sma$r$t$Agr$iD$a$%tabase",
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     console.log("DB Connected");
   })

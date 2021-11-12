@@ -4,6 +4,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
 
 const app = express();
 
@@ -13,6 +14,8 @@ const fileUploadRoute = require("./routes/api/fileUpload");
 
 //Database Connection
 require("./db/connection");
+
+app.use(cors());
 
 app.use(logger("dev"));
 app.use(express.json());
