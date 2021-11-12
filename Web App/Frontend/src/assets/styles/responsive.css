@@ -70,4 +70,7 @@
   .layout-dashboard.layout-dashboard-rtl .header-control {
     justify-content: flex-end;
   }
+  .mac-search {
+    width: 100% !important;
+  }
 }

@@ -1,10 +1,41 @@
-import { Menu } from "antd";
+import { Menu, Upload, message, Button, Form } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import smartAgri from "../../api/smartAgri";
 
 function Sidenav({ color }) {
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
+  const [dta, setDta] = useState(null);
+  const [uploadList, setUploadList] = useState(true);
+
+  const uploadFile = () => {
+    const data = new FormData();
+
+    data.append("file", dta);
+
+    smartAgri
+      .post("/api/fileUpload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setUploadList(false);
+
+        message.success("Upload Successfully");
+      })
+      .catch((err) => {
+        console.log("In err");
+        setUploadList(false);
+        message.error("Cant Upload");
+        console.log(err);
+      });
+  };
 
   const tables = [
     <svg
@@ -28,6 +59,12 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
+  const beforeUpload = (file) => {
+    setDta(file);
+    console.log("INFOLEreder");
+
+    return false;
+  };
   return (
     <>
       <div className="brand">
@@ -49,78 +86,34 @@ function Sidenav({ color }) {
             <span className="label">Data</span>
           </NavLink>
         </Menu.Item>
-        {/* <Menu.Item key="3">
-          <NavLink to="/billing">
-            <span
-              className="icon"
-              style={{
-                background: page === "billing" ? color : "",
-              }}
-            >
-              {billing}
-            </span>
-            <span className="label">Billing</span>
-          </NavLink>
-        </Menu.Item>
         <Menu.Item key="4">
-          <NavLink to="/rtl">
-            <span
-              className="icon"
-              style={{
-                background: page === "rtl" ? color : "",
-              }}
-            >
-              {rtl}
-            </span>
-            <span className="label">RTL</span>
-          </NavLink>
+          <Form name="file-upload-form" onFinish={uploadFile}>
+            <Form.Item name="file">
+              <Upload beforeUpload={beforeUpload} showUploadList={uploadList}>
+                <Button
+                  style={{
+                    marginTop: "50px",
+                    marginLeft: "20px",
+                    borderRadius: "50px",
+                  }}
+                  icon={<UploadOutlined />}
+                >
+                  Click to Upload
+                </Button>
+              </Upload>
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: "100%" }}
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
         </Menu.Item>
-        <Menu.Item className="menu-item-header" key="5">
-          Account Pages
-        </Menu.Item> */}
-        {/* <Menu.Item key="6">
-          <NavLink to="/profile">
-            <span
-              className="icon"
-              style={{
-                background: page === "profile" ? color : "",
-              }}
-            >
-              {profile}
-            </span>
-            <span className="label">Profile</span>
-          </NavLink>
-        </Menu.Item> */}
-        {/* <Menu.Item key="7">
-          <NavLink to="/sign-in">
-            <span className="icon">{signin}</span>
-            <span className="label">Sign In</span>
-          </NavLink>
-        </Menu.Item> */}
-        {/* <Menu.Item key="8">
-          <NavLink to="/sign-up">
-            <span className="icon">{signup}</span>
-            <span className="label">Sign Up</span>
-          </NavLink>
-        </Menu.Item> */}
       </Menu>
-      {/* <div className="aside-footer">
-        <div
-          className="footer-box"
-          style={{
-            background: color,
-          }}
-        >
-          <span className="icon" style={{ color }}>
-            {dashboard}
-          </span>
-          <h6>Need Help?</h6>
-          <p>Please check our docs</p>
-          <Button type="primary" className="ant-btn-sm ant-btn-block">
-            DOCUMENTATION
-          </Button>
-        </div>
-      </div> */}
     </>
   );
 }

@@ -4,7 +4,6 @@ const ProtectedRoutes = ({ Cmp }) => {
   useEffect(() => {
     if (!localStorage.getItem("user-info")) {
       history.push("/sign-in");
-      //   <Redirect to="/sign-in" />;
     }
   }, []);
   return (

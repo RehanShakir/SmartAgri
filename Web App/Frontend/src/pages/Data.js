@@ -1,18 +1,22 @@
 import "../assets/styles/main.css";
-import React, { useEffect, useState, useHistory } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import history from "../utils/CreateBrowserHistory";
+import LineChart from "../components/chart/LineChart";
 
 import smartAgri from "../api/smartAgri";
-import { Row, Col, Card, Table, Typography, Input } from "antd";
+import { Row, Col, Card, Table, Input, Button, BackTop } from "antd";
 
 import { SearchOutlined } from "@ant-design/icons";
 
-const { Title } = Typography;
-
 const Data = () => {
+  const myRef = useRef(null);
+  const myRef1 = useRef(null);
+
   const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState(5);
   const [macAddress, setMacAddress] = useState("");
+
+  const executeScroll = () => myRef.current.scrollIntoView();
+  const executeScroll1 = () => myRef1.current.scrollIntoView();
 
   useEffect(() => {
     if (localStorage.getItem("user-info")) {
@@ -20,90 +24,108 @@ const Data = () => {
     }
     console.log("In USE");
     const agriData = () => {
+      console.log("Calling");
       smartAgri
         .post("/api/mqtt/getOne", {
           macAddress,
         })
         .then((res) => {
           console.log("Sucess");
+          localStorage.setItem("macAddress", JSON.stringify(macAddress));
+          console.log(res.data.macAddress);
           setData(res.data);
-          //console.log(res.data);
-          // console.log(data);
         })
         .catch((err) => {
           console.log(err);
         });
     };
     agriData();
-    // console.log(data);
   }, [macAddress]);
+  // console.log(data);
+  const environmentData = data.map((d) => {
+    return d.Environment[0];
+  });
 
-  // const mappedData = data.map((d) => {
-  //   return d.Environment[0];
-  // });
-  // const again = mappedData.map((d1) => {
-  //   return d1.Atmospheric_Pressure;
-  // });
-  // console.log(data[0].Soil_Parameters[0]);
+  const soilData = data.map((d) => {
+    return d.Soil_Parameters[0];
+  });
 
-  const columns = [
+  const environmentCol = [
     {
       title: "Temperature",
-      dataIndex: "temperature",
-      key: "name",
-      render: () => `${data[0].Environment[0].Temperautre}`,
-      // width: "32%",
+      dataIndex: "Temperautre",
+      key: "Temprature",
     },
     {
       title: "Humidity",
-      dataIndex: "humidity",
-      render: () => `${data[0].Environment[0].Humidity}`,
-      key: "function",
+      dataIndex: "Humidity",
+      key: "humidity",
     },
 
     {
       title: "Atmosphereic Pressure",
-      key: "status",
-      dataIndex: "atmosphereicPressure",
-      render: () => `${data[0].Environment[0].Atmospheric_Pressure}`,
+      key: "atmosphericpressure",
+      dataIndex: "Atmospheric_Pressure",
     },
   ];
 
-  const project = [
+  const soilCol = [
     {
       title: "Soil Moisture",
-      dataIndex: "soil_moisture",
-      render: () => `${data[0].Soil_Parameters[0].Soil_Moisture}`,
+      dataIndex: "Soil_Moisture",
+      key: "Soil_Moisture",
     },
     {
       title: "EC",
-      dataIndex: "ec",
-      render: () => `${data[0].Soil_Parameters[0].EC}`,
+      dataIndex: "EC",
+      key: "EC",
     },
     {
       title: "pH",
-      dataIndex: "ph",
-      render: () => `${data[0].Soil_Parameters[0].pH}`,
+      dataIndex: "pH",
+      key: "pH",
     },
     {
       title: "Nitrogen",
-      dataIndex: "nitrogen",
-      render: () => `${data[0].Soil_Parameters[0].Nitrogen}`,
+      dataIndex: "Nitrogen",
+      key: "Nitrogen",
     },
     {
       title: "Phosphorus",
-      dataIndex: "phosphorus",
-      render: () => `${data[0].Soil_Parameters[0].Phosphorus}`,
+      dataIndex: "Phosphorus",
+      key: "Phosphorus",
     },
     {
       title: "Potassium",
-      dataIndex: "potassium",
-      render: () => `${data[0].Soil_Parameters[0].Potassium}`,
+      dataIndex: "Potassium",
+      key: "Potassium",
     },
   ];
 
   return (
     <>
+      <div className="flex-container" style={{ marginBottom: "10px" }}>
+        <Button
+          type="primary"
+          style={{
+            paddingLeft: 11,
+            borderRadius: "50px",
+          }}
+          onClick={executeScroll}
+        >
+          Soil Parameters
+        </Button>
+        <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
+            borderRadius: "50px",
+          }}
+          onClick={executeScroll1}
+        >
+          Charts
+        </Button>
+      </div>
       <Input
         className="mac-search"
         placeholder="Enter MacAddress"
@@ -122,32 +144,50 @@ const Data = () => {
             >
               <div className="table-responsive">
                 <Table
-                  columns={columns}
-                  dataSource={data}
+                  key="enCol"
+                  columns={environmentCol}
                   pagination={5}
+                  dataSource={environmentData}
                   className="ant-border-space"
                 />
               </div>
             </Card>
-
-            <Card
-              bordered={false}
-              className="criclebox tablespace mb-24"
-              title="Soil Parameters"
-              style={{ marginTop: 50 }}
-            >
-              <div className="table-responsive">
-                <Table
-                  columns={project}
-                  dataSource={data}
-                  pagination={true}
-                  className="ant-border-space"
-                />
-              </div>
+            <div ref={myRef}>
+              <Card
+                bordered={false}
+                className="criclebox tablespace mb-24"
+                title="Soil Parameters"
+                style={{ marginTop: 50 }}
+              >
+                <div className="table-responsive">
+                  <Table
+                    key="soilCol"
+                    columns={soilCol}
+                    dataSource={soilData}
+                    pagination={true}
+                    className="ant-border-space"
+                  />
+                </div>
+              </Card>
+            </div>
+          </Col>
+        </Row>
+      </div>
+      <div ref={myRef1} className="layout-content" style={{ marginTop: 50 }}>
+        <Row gutter={[24, 0]}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
+            <Card bordered={false} className="criclebox h-full">
+              <LineChart
+                key="lineChart"
+                enData={environmentData}
+                soilData={soilData}
+                data={data}
+              />
             </Card>
           </Col>
         </Row>
       </div>
+      <BackTop />
     </>
   );
 };
