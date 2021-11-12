@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 //To Get one Device Data using MacAddress
-router.get("/getOne", async (req, res) => {
+router.post("/getOne", async (req, res) => {
   try {
     let mqttMessgaes = await mqttMessgae.find({
       macAddress: req.body.macAddress,
