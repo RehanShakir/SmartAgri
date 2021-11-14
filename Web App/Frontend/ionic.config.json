@@ -1,0 +1,7 @@
+{
+    "name": "SmartAgri",
+    "integrations": {
+      "capacitor": {}
+    },
+    "type": "react"
+  }
