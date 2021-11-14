@@ -4,9 +4,21 @@ import history from "../utils/CreateBrowserHistory";
 import LineChart from "../components/chart/LineChart";
 
 import smartAgri from "../api/smartAgri";
-import { Row, Col, Card, Table, Input, Button, BackTop } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  Table,
+  Input,
+  Button,
+  BackTop,
+  Modal,
+  Form,
+  message,
+  Select,
+} from "antd";
 
-import { SearchOutlined } from "@ant-design/icons";
+const { Option } = Select;
 
 const Data = () => {
   const myRef = useRef(null);
@@ -14,6 +26,7 @@ const Data = () => {
 
   const [data, setData] = useState([]);
   const [macAddress, setMacAddress] = useState("");
+  const [userMacAddress, setUserMacAddress] = useState([]);
 
   const executeScroll = () => myRef.current.scrollIntoView();
   const executeScroll1 = () => myRef1.current.scrollIntoView();
@@ -102,6 +115,87 @@ const Data = () => {
     },
   ];
 
+  //Modal Functions
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const getIdofLoggedInUser = () => {
+    function parseJwt(token) {
+      if (!token) {
+        return;
+      }
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace("-", "+").replace("_", "/");
+      return JSON.parse(window.atob(base64));
+    }
+
+    const token = localStorage.getItem("user-info");
+    const user = parseJwt(token);
+
+    return user.id;
+  };
+  //Form Functions
+  const onFinish = async (values) => {
+    const id = getIdofLoggedInUser();
+    await smartAgri
+      .put(`/api/users/update/${id}`, {
+        macAddress: values.macAddress,
+      })
+      .then((res) => {
+        setIsModalVisible(false);
+        message.success("Device Added");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
+  //Select Functions
+  function handleChange(value) {
+    setMacAddress(value);
+    console.log(`selected ${value}`);
+  }
+
+  const getMacAddresses = async () => {
+    const id = getIdofLoggedInUser();
+
+    await smartAgri
+      .get(`/api/users/getMacAddress/${id}`)
+      .then((res) => {
+        setUserMacAddress(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const renderedOptions = userMacAddress.map((macadd) => {
+    if (macadd) {
+      return (
+        <Option key={`${macadd}`} value={`${macadd}`}>
+          {macadd}
+        </Option>
+      );
+    } else {
+      return;
+    }
+  });
+
   return (
     <>
       <div className="flex-container" style={{ marginBottom: "10px" }}>
@@ -125,15 +219,75 @@ const Data = () => {
         >
           Charts
         </Button>
+        <Button
+          type="primary"
+          className="addDevicebtn"
+          onClick={showModal}
+          style={{
+            marginLeft: "10px",
+            borderRadius: "50px",
+          }}
+        >
+          Add New Device
+        </Button>
+        <Modal
+          title="Add a New Device"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Form
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            layout="vertical"
+            className="row-col"
+          >
+            <Form.Item
+              className="username"
+              label="Mac Address"
+              name="macAddress"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter Device MacAddress",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Enter MacAddress"
+                style={{ paddingTop: 23.5, paddingBottom: 23.5 }}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: "100%" }}
+              >
+                Add
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
-      <Input
+      {/* <Input
         className="mac-search"
         placeholder="Enter MacAddress"
         onChange={(e) => {
           setMacAddress(e.target.value);
         }}
         prefix={<SearchOutlined />}
-      />
+      /> */}
+      <Select
+        className="mac-search"
+        defaultValue="Select MacAddress"
+        style={{ width: 120, borderRadius: "150px", marginBottom: "15px" }}
+        onChange={handleChange}
+        onClick={getMacAddresses}
+      >
+        {renderedOptions}
+      </Select>
       <div className="tabled">
         <Row gutter={[24, 0]}>
           <Col xs="24" xl={24}>

@@ -13,8 +13,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const onFinish = () => {
-    smartAgri
+  const onFinish = async () => {
+    await smartAgri
       .post("/api/users/register", {
         email: email,
         password: password,
@@ -23,7 +23,7 @@ const SignUp = () => {
       .then((res) => {
         console.log("Signed Up Successfully!");
         localStorage.setItem("user-info", JSON.stringify(res));
-        history.push("/tables");
+        history.push("/sign-in");
 
         console.log(res);
       })
