@@ -18,13 +18,19 @@ let userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  macAddress: [
+    {
+      type: String,
+      default: "",
+    },
+  ],
 });
 
 // function validateUser(user) {
 //   const schema = {
 //     email: Joi.string().min(5).max(255).required().email(),
 //   };
-// }
+//
 userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign({ id: this._id }, process.env.JWTSECRETKEY);
   return token;
