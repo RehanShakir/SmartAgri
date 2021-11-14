@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import history from "../../utils/CreateBrowserHistory";
 
 import { Row, Col, Breadcrumb, Button } from "antd";
@@ -33,10 +33,6 @@ function Header({ name, subName, onPress }) {
     localStorage.clear();
     history.push("/sign-in");
   };
-  // const { Title, Text } = Typography;
-
-  // const [visible, setVisible] = useState(false);
-  // const [sidenavType, setSidenavType] = useState("transparent");
 
   useEffect(() => window.scrollTo(0, 0));
 

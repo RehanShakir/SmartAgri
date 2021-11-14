@@ -15,9 +15,6 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  // const error = validateUser(req.body);
-  // if (error) return res.status(400).send(error.details[0].message);
-
   try {
     let { email, password, confirmPassword } = req.body;
 
@@ -71,9 +68,29 @@ router.post("/login", async (req, res) => {
         return res.status(400).send("Invalid Email or Password");
       }
     });
+    // return res.json();
+    // return res.header("x-auth-token", email).send("sucess");
   } catch (err) {
     console.log(err);
   }
+});
+
+router.put("/update/:id", async (req, res) => {
+  console.log("put");
+  try {
+    let user = await UserModel.findByIdAndUpdate(req.params.id, {
+      $push: { macAddress: req.body.macAddress },
+    });
+    await user.save();
+    return res.send("Data saved");
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get("/getMacAddress/:id", async (req, res) => {
+  let user = await UserModel.findById(req.params.id);
+  return res.send(user.macAddress);
 });
 
 module.exports = router;

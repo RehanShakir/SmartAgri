@@ -15,6 +15,9 @@
   .layout-dashboard .header-control .sidebar-toggler {
     display: none;
   }
+  .addDevicebtn {
+    margin-top: 10px;
+  }
 }
 
 @media (min-width: 768px) {
@@ -35,6 +38,9 @@
   }
   .card-profile-head {
     margin: -53px 24px 24px;
+  }
+  .addDevicebtn {
+    margin-top: 10px;
   }
 }
 
@@ -64,13 +70,18 @@
   .layout-dashboard-rtl .ant-layout-footer {
     margin: 0 20px 20px 0;
   }
+  .addDevicebtn {
+    margin-top: 10px;
+  }
 }
-
 @media (max-width: 768px) {
   .layout-dashboard.layout-dashboard-rtl .header-control {
     justify-content: flex-end;
   }
   .mac-search {
     width: 100% !important;
+  }
+  .addDevicebtn {
+    margin-top: 10px;
   }
 }
