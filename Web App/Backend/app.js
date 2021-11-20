@@ -4,6 +4,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const fileUpload = require("express-fileupload");
+const path = require('path')
+
 const cors = require("cors");
 
 const app = express();
@@ -26,6 +28,8 @@ app.use(fileUpload());
 app.use("/api/users", userRoute);
 app.use("/api/mqtt", mqttRoute);
 app.use("/api/fileUpload", fileUploadRoute);
+app.use('/api/ota', express.static(path.join(__dirname, 'routes/api/files')));
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

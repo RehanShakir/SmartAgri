@@ -5,6 +5,7 @@ void reconnect();
 bool mqttConnect();
 void mqttPublish(String path, String msg);
 int deviceExisits = 0;
+IPAddress ip(34,214,65,82);
 void MQTTUnSubscribe()
 {
     String topicN = String("smart-agri/deviceExistance");
@@ -49,16 +50,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     }
 
     // Switch on the LED if an 1 was received as first character
-    if ((char)payload[0] == '1')
-    {
-        digitalWrite(BUILTIN_LED, LOW); // Turn the LED on (Note that LOW is the voltage level
-                                        // but actually the LED is on; this is because
-                                        // it is active low on the ESP-01)
-    }
-    else
-    {
-        digitalWrite(BUILTIN_LED, HIGH); // Turn the LED off by making the voltage HIGH
-    }
+   
     pLoad = "";
 }
 void reconnect()
@@ -101,7 +93,7 @@ bool mqttConnect()
         if (String(mqtt_server).length() <= 0)
             break;
 
-        mqttClient.setServer(mqtt_server, 1883);
+        mqttClient.setServer(ip, 1883);
         mqttClient.setCallback(callback);
         Serial.println(String("Attempting MQTT broker:") + String("smart-agri Broker"));
         internetStatus = "Connecting...";

@@ -64,7 +64,7 @@ String readN()
         Serial.println(val);
     }
 
-    delay(10);
+    delay(1);
     return val;
 }
 
@@ -90,7 +90,7 @@ String readP()
         Serial.println(val);
     }
 
-    delay(10);
+    delay(1);
     return val;
 }
 String readK()
@@ -115,7 +115,7 @@ String readK()
         Serial.println(val);
     }
 
-    delay(10);
+    delay(1);
     return val;
 }
 String getNPK()

@@ -7,29 +7,39 @@ Adafruit_Sensor *bme_temp = bme.getTemperatureSensor();
 Adafruit_Sensor *bme_pressure = bme.getPressureSensor();
 Adafruit_Sensor *bme_humidity = bme.getHumiditySensor();
 uint8_t bmeConnected = 0;
-int retryCount=0;
+int retryCount = 0;
 void setupBME280()
 {
 
     Serial.println(F("BME280 Sensor event test"));
 
-    while (!bme.begin())
-    {   retryCount++;
-        if(retryCount>=20){
+    while (1)
+    {
+        retryCount++;
+        if (retryCount >= 20)
+        {
             break;
         }
-        Serial.println(F("Could not find a valid BME280 sensor, check wiring and restart!"));
-        bmeConnected = 0;
+        if (!bme.begin())
+        {
+
+            bmeConnected = 0;
+        }
+        else
+        {
+            bmeConnected = 1;
+        }
     }
-    else
-    {
-        bmeConnected = 1;
-    }
-    if(bmeConnected == 1)
+
+    if (bmeConnected == 1)
     {
         bme_temp->printSensorDetails();
         bme_pressure->printSensorDetails();
         bme_humidity->printSensorDetails();
+    }
+    else
+    {
+        Serial.println(F("Could not find a valid BME280 sensor, check wiring and restart!"));
     }
 }
 
@@ -61,7 +71,7 @@ String getBMEVal()
         Serial.println(" hPa");
 
         Serial.println();
-        delay(10);
+        delay(1);
         return BME_DATA;
     }
     else

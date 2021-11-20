@@ -9,6 +9,7 @@
    "COPY ./ /usr/src/app3",
    "RUN npm install && npm cache clean --force",
    
+   
    "ENV NODE_ENV production",
    "ENV PORT 80",
    "EXPOSE 80",

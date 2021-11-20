@@ -13,6 +13,6 @@ String getSoilMoisture()
     Serial.print("Moisture : ");
     Serial.print(value);
     Serial.println("%");
-    delay(10);
+    delay(1);
     return String(value);
 }

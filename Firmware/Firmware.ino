@@ -5,6 +5,7 @@
 #include "commHandler.h"
 #include "BMEHandler.h"
 #include "soilMoistureHandler.h"
+#include "dataHandler.h"
 IPAddress ipV(192, 168, 4, 1);
 String loadParams(AutoConnectAux &aux, PageArgument &args) //function to load saved settings
 {
@@ -229,10 +230,14 @@ void loop()
 
     if (millis() - lastPub > updateInterval) //publish data to mqtt server
     {
-        mqttPublish("smart-agri/" + String(hostName) + String("bme280/"), String(getBMEVal()));             //publish data to mqtt broker
-        mqttPublish("smart-agri/" + String(hostName) + String("npk/"), String(getNPK()));                   //publish data to mqtt broker
-        mqttPublish("smart-agri/" + String(hostName) + String("soilMoisture/"), String(getSoilMoisture())); //publish data to mqtt broker
-        ledState(ACTIVE_MODE);
+        // mqttPublish("smart-agri/" + String(hostName) + String("bme280/"), String(getBMEVal()));             //publish data to mqtt broker
+        // mqttPublish("smart-agri/" + String(hostName) + String("npk/"), String(getNPK()));                   //publish data to mqtt broker
+        // mqttPublish("smart-agri/" + String(hostName) + String("soilMoisture/"), String(getSoilMoisture())); //publish data to mqtt broker
+        String bme = getBMEVal();
+        
+        sendData(ss.StringSeparator(bme, ';', 0), ss.StringSeparator(bme, ';', 1), ss.StringSeparator(bme, ';', 2),String(getSoilMoisture()),String("0.0"),String("6.3"),String("0.0"),String("6.3"),String("0.0"));
+
+            ledState(ACTIVE_MODE);
 
         lastPub = millis();
     }
