@@ -236,7 +236,7 @@ void loop()
         String bme = getBMEVal();
         
         sendData(ss.StringSeparator(bme, ';', 0), ss.StringSeparator(bme, ';', 1), ss.StringSeparator(bme, ';', 2),String(getSoilMoisture()),String("0.0"),String("6.3"),String("0.0"),String("6.3"),String("0.0"));
-
+        //send values
             ledState(ACTIVE_MODE);
 
         lastPub = millis();
