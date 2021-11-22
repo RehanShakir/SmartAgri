@@ -3046,3 +3046,7 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   box-shadow: 0 20px 27px rgb(0 0 0 / 5%) !important;
   border-radius: 50px !important;
 }
+.apex-x-axis {
+  margin-right: 100px;
+  padding: 50px;
+}

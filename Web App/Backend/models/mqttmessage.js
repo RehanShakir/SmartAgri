@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+// let date = new Date();
+
 let mqttMessageSchema = mongoose.Schema(
   {
     macAddress: {
@@ -10,7 +12,14 @@ let mqttMessageSchema = mongoose.Schema(
       type: String,
     },
     Environment: [
-      { Temperautre: Number, Humidity: Number, Atmospheric_Pressure: Number },
+      {
+        Temperautre: Number,
+        Humidity: Number,
+        Atmospheric_Pressure: Number,
+        Time: { type: String, default: Date },
+
+        // Date: { type: String, default: date.toLocaleDateString() },
+      },
     ],
     Soil_Parameters: [
       {
@@ -20,12 +29,13 @@ let mqttMessageSchema = mongoose.Schema(
         Nitrogen: Number,
         Phosphorus: Number,
         Potassium: Number,
+        Time: { type: String, default: Date },
+        // Date: { type: String, default: date.toLocaleDateString() },
       },
     ],
   },
   { timestamps: true }
 );
-
 let mqttMessageModel = new mongoose.model("Mqttmessage", mqttMessageSchema);
 
 module.exports = mqttMessageModel;
