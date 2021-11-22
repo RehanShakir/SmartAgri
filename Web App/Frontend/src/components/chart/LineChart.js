@@ -1,5 +1,6 @@
 import ReactApexChart from "react-apexcharts";
 import React from "react";
+import "../../assets/styles/main.css";
 
 import { Typography } from "antd";
 import { MinusOutlined } from "@ant-design/icons";
@@ -20,7 +21,8 @@ const LineChart = ({ enData, soilData, data }) => {
   let enTime = [];
 
   data.map((d) => {
-    enTime.push(d.createdAt.split("T")[1].split(".")[0].slice(0, 5));
+    // enTime.push(d.createdAt.split("T")[1].split(".")[0].slice(0, 5));
+    enTime.push(d.createdAt);
     return 0;
   });
   // console.log(enTime);
@@ -95,10 +97,17 @@ const LineChart = ({ enData, soilData, data }) => {
       },
 
       xaxis: {
+        // type: "numeric",
         labels: {
+          trim: false,
+          // hideOverlappingLabels: false,
+          showDuplicates: false,
+          // tickAmount: 1,
+          // range: 10,
           style: {
-            fontSize: "14px",
+            fontSize: "10px",
             fontWeight: 600,
+            cssClass: "apex-x-axis",
             colors: [
               "#8c8c8c",
               "#8c8c8c",
@@ -111,7 +120,12 @@ const LineChart = ({ enData, soilData, data }) => {
               "#8c8c8c",
             ],
           },
+          itemMargin: {
+            horizontal: 15,
+            vertical: 10,
+          },
         },
+
         categories: enTime,
       },
 
@@ -187,7 +201,7 @@ const LineChart = ({ enData, soilData, data }) => {
       xaxis: {
         labels: {
           style: {
-            fontSize: "14px",
+            fontSize: "10px",
             fontWeight: 600,
             colors: [
               "#8c8c8c",
@@ -244,9 +258,12 @@ const LineChart = ({ enData, soilData, data }) => {
         </div>
         <div className="sales">
           <ul>
-            <li>{<MinusOutlined />} Termperature</li>
-            <li>{<MinusOutlined />} Humidity</li>
-            <li>{<MinusOutlined />} Atmospheric Pressure</li>
+            <li>{<MinusOutlined />}Soil_Moisture</li>
+            <li>{<MinusOutlined />}EC</li>
+            <li>{<MinusOutlined />}pH</li>
+            <li>{<MinusOutlined />}Nitrogen</li>
+            <li>{<MinusOutlined />}Phosphorus</li>
+            <li>{<MinusOutlined />}Potassium</li>
           </ul>
         </div>
       </div>

@@ -19,8 +19,6 @@ mongoose
     console.log(err);
   });
 
-// const mongoose = require("mongoose");
-
 // mongoose
 //   .connect(
 //     "mongodb+srv://rehan:rehan@cluster0.qhfay.mongodb.net/sensors?retryWrites=true&w=majority",

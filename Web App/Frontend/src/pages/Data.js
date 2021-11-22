@@ -28,9 +28,30 @@ const Data = () => {
   const [macAddress, setMacAddress] = useState("");
   const [userMacAddress, setUserMacAddress] = useState([]);
 
+  // let intervalId = null;
+
   const executeScroll = () => myRef.current.scrollIntoView();
   const executeScroll1 = () => myRef1.current.scrollIntoView();
 
+  const useInterval = (callback, delay) => {
+    const savedCallback = useRef();
+
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  };
   useEffect(() => {
     if (localStorage.getItem("user-info")) {
       history.push("/tables");
@@ -40,11 +61,10 @@ const Data = () => {
       console.log("Calling");
       smartAgri
         .post("/api/mqtt/getOne", {
-          macAddress,
+          macAddress: localStorage.getItem("macAddress"),
         })
         .then((res) => {
           console.log("Sucess");
-          localStorage.setItem("macAddress", JSON.stringify(macAddress));
           console.log(res.data.macAddress);
           setData(res.data);
         })
@@ -54,16 +74,38 @@ const Data = () => {
     };
     agriData();
   }, [macAddress]);
-  // console.log(data);
+
+  useEffect(() => {}, [data]);
+  useInterval(() => {
+    // Make the request here
+    smartAgri
+      .post("/api/mqtt/getOne", {
+        macAddress: localStorage.getItem("macAddress"),
+      })
+      .then((res) => {
+        console.log("Sucess");
+        // localStorage.setItem("macAddress", JSON.stringify(macAddress));
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, 1000 * 60);
+
   const environmentData = data.map((d) => {
     return d.Environment[0];
   });
-
   const soilData = data.map((d) => {
     return d.Soil_Parameters[0];
   });
 
   const environmentCol = [
+    {
+      title: "Date/Time",
+      dataIndex: "Time",
+      key: "Time",
+    },
     {
       title: "Temperature",
       dataIndex: "Temperautre",
@@ -83,6 +125,17 @@ const Data = () => {
   ];
 
   const soilCol = [
+    // {
+    //   title: "Date",
+    //   dataIndex: "Date",
+    //   key: "Date",
+    //   defaultSortOrder: "descend",
+    // },
+    {
+      title: "Date/Time",
+      dataIndex: "Time",
+      key: "Time",
+    },
     {
       title: "Soil Moisture",
       dataIndex: "Soil_Moisture",
@@ -148,6 +201,7 @@ const Data = () => {
   //Form Functions
   const onFinish = async (values) => {
     const id = getIdofLoggedInUser();
+    console.log(id);
     await smartAgri
       .put(`/api/users/update/${id}`, {
         macAddress: values.macAddress,
@@ -157,6 +211,7 @@ const Data = () => {
         message.success("Device Added");
       })
       .catch((err) => {
+        console.log("ER");
         console.log(err);
       });
   };
@@ -167,8 +222,10 @@ const Data = () => {
 
   //Select Functions
   function handleChange(value) {
-    setMacAddress(value);
-    console.log(`selected ${value}`);
+    localStorage.setItem("macAddress", value);
+
+    setMacAddress(localStorage.getItem("macAddress", value));
+    console.log(`selected ${localStorage.getItem("macAddress", value)}`);
   }
 
   const getMacAddresses = async () => {
@@ -271,17 +328,10 @@ const Data = () => {
           </Form>
         </Modal>
       </div>
-      {/* <Input
-        className="mac-search"
-        placeholder="Enter MacAddress"
-        onChange={(e) => {
-          setMacAddress(e.target.value);
-        }}
-        prefix={<SearchOutlined />}
-      /> */}
+
       <Select
         className="mac-search"
-        defaultValue="Select MacAddress"
+        defaultValue={localStorage.getItem("macAddress")}
         style={{ width: 120, borderRadius: "150px", marginBottom: "15px" }}
         onChange={handleChange}
         onClick={getMacAddresses}
