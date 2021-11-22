@@ -7,6 +7,8 @@
 #include "soilMoistureHandler.h"
 #include "dataHandler.h"
 IPAddress ipV(192, 168, 4, 1);
+char npkData[2024] = {"0.0,0.0,0.0"};
+TaskHandle_t npkTask;
 String loadParams(AutoConnectAux &aux, PageArgument &args) //function to load saved settings
 {
     (void)(args);
@@ -96,13 +98,55 @@ bool whileCP()
 
     loopLEDHandler();
 }
+void getNPKData()
+{
+    String message = "";
+    if (queue != NULL)
+    {
+        char element[2024];
+        xQueueReceive(queue, &element, (TickType_t)(100 / portTICK_PERIOD_MS));
+        message = String(element);
+        String n = ss.StringSeparator(message, ';', 0);
+        String p = ss.StringSeparator(message, ';', 1);
+        String k = ss.StringSeparator(message, ';', 2);
+        setN(n);
+        setP(p);
+        setK(k);
+    }
+}
+void loopNPKSensor(void *pvParameters)
+{
 
+    setupCommsHandler();
+    for (;;)
+    {
+        getNPK();
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+}
 void setup() //main setup functions
 {
     Serial.begin(115200);
-    setupCommsHandler();
+
     setupBME280();
     setupSoilMoisture();
+    queue = xQueueCreate(1, sizeof(npkData));
+    if (queue == NULL)
+    {
+        Serial.println("Error creating the queue");
+    }
+
+    xQueueSend(queue, &npkData, portMAX_DELAY);
+
+    xTaskCreatePinnedToCore(
+        loopNPKSensor, /* Task function. */
+        "Twitter",     /* name of task. */
+        10000,         /* Stack size of task */
+        NULL,          /* parameter of the task */
+        1,             /* priority of the task */
+        &npkTask,      /* Task handle to keep track of created task */
+        1);
+    delay(500);
     delay(1000);
 
     if (!MDNS.begin("esp32")) //starting mdns so that user can access webpage using url `esp32.local`(will not work on all devices)
@@ -234,10 +278,11 @@ void loop()
         // mqttPublish("smart-agri/" + String(hostName) + String("npk/"), String(getNPK()));                   //publish data to mqtt broker
         // mqttPublish("smart-agri/" + String(hostName) + String("soilMoisture/"), String(getSoilMoisture())); //publish data to mqtt broker
         String bme = getBMEVal();
-        
-        sendData(ss.StringSeparator(bme, ';', 0), ss.StringSeparator(bme, ';', 1), ss.StringSeparator(bme, ';', 2),String(getSoilMoisture()),String("0.0"),String("6.3"),String("0.0"),String("6.3"),String("0.0"));
+        getNPKData();
+
+        sendData(ss.StringSeparator(bme, ';', 0), ss.StringSeparator(bme, ';', 1), ss.StringSeparator(bme, ';', 2), String(getSoilMoisture()), String("0.0"), String("0.0"), getN(), getP(), getK());
         //send values
-            ledState(ACTIVE_MODE);
+        ledState(ACTIVE_MODE);
 
         lastPub = millis();
     }

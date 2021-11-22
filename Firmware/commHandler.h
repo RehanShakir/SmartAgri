@@ -1,4 +1,5 @@
 #include <ModbusMaster.h>
+QueueHandle_t queue;
 
 // instantiate ModbusMaster object
 #define MAX485_DE 12
@@ -41,6 +42,27 @@ void setupCommsHandler()
 }
 
 bool state = true;
+String NVal="0.0";
+String PVal="0.0";
+String KVal="0.0";
+void setN(String v){
+    NVal=v;
+}
+void setP(String v){
+    PVal=v;
+}
+void setK(String v){
+    KVal=v;
+}
+String getN(){
+    return NVal;
+}
+String getP(){
+    return PVal;
+}
+String getK(){
+    return KVal;
+}
 
 String readN()
 {
@@ -62,6 +84,11 @@ String readN()
         Serial.print("N: ");
         val = String(node.getResponseBuffer(0x04));
         Serial.println(val);
+    }
+    else
+    {
+        val = "0.0";
+        return val;
     }
 
     delay(1);
@@ -89,6 +116,11 @@ String readP()
         val = String(node.getResponseBuffer(0x04));
         Serial.println(val);
     }
+    else
+    {
+        val = "0.0";
+        return val;
+    }
 
     delay(1);
     return val;
@@ -114,6 +146,11 @@ String readK()
         val = String(node.getResponseBuffer(0x04));
         Serial.println(val);
     }
+    else
+    {
+        val = "0.0";
+        return val;
+    }
 
     delay(1);
     return val;
@@ -121,5 +158,9 @@ String readK()
 String getNPK()
 {
     String v = readN() + String(";") + readP() + String(";") + readK();
+
+    char val[2024];
+    strcpy(val, v.c_str());
+    xQueueSend(queue, &val, (TickType_t)0);
     return v;
 }
