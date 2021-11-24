@@ -66,7 +66,7 @@ const Data = () => {
         .then((res) => {
           console.log("Sucess");
           console.log(res.data.macAddress);
-          setData(res.data);
+          setData(res.data.reverse());
         })
         .catch((err) => {
           console.log(err);
@@ -74,7 +74,6 @@ const Data = () => {
     };
     agriData();
   }, [macAddress]);
-
   useEffect(() => {}, [data]);
   useInterval(() => {
     // Make the request here
@@ -125,12 +124,6 @@ const Data = () => {
   ];
 
   const soilCol = [
-    // {
-    //   title: "Date",
-    //   dataIndex: "Date",
-    //   key: "Date",
-    //   defaultSortOrder: "descend",
-    // },
     {
       title: "Date/Time",
       dataIndex: "Time",
