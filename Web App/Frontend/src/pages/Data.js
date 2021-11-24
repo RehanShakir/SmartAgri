@@ -56,17 +56,17 @@ const Data = () => {
     if (localStorage.getItem("user-info")) {
       history.push("/tables");
     }
-    console.log("In USE");
+    // console.log("In USE");
     const agriData = () => {
-      console.log("Calling");
+      // console.log("Calling");
       smartAgri
         .post("/api/mqtt/getOne", {
           macAddress: localStorage.getItem("macAddress"),
         })
         .then((res) => {
-          console.log("Sucess");
-          console.log(res.data.macAddress);
-          setData(res.data);
+          // console.log("Sucess");
+          // console.log(res.data.macAddress);
+          setData(res.data.reverse());
         })
         .catch((err) => {
           console.log(err);
@@ -74,7 +74,6 @@ const Data = () => {
     };
     agriData();
   }, [macAddress]);
-
   useEffect(() => {}, [data]);
   useInterval(() => {
     // Make the request here
@@ -83,10 +82,10 @@ const Data = () => {
         macAddress: localStorage.getItem("macAddress"),
       })
       .then((res) => {
-        console.log("Sucess");
+        // console.log("Sucess");
         // localStorage.setItem("macAddress", JSON.stringify(macAddress));
-        console.log(res.data);
-        setData(res.data);
+        // console.log(res.data);
+        setData(res.data.reverse());
       })
       .catch((err) => {
         console.log(err);
@@ -125,12 +124,6 @@ const Data = () => {
   ];
 
   const soilCol = [
-    // {
-    //   title: "Date",
-    //   dataIndex: "Date",
-    //   key: "Date",
-    //   defaultSortOrder: "descend",
-    // },
     {
       title: "Date/Time",
       dataIndex: "Time",
@@ -201,7 +194,7 @@ const Data = () => {
   //Form Functions
   const onFinish = async (values) => {
     const id = getIdofLoggedInUser();
-    console.log(id);
+    // console.log(id);
     await smartAgri
       .put(`/api/users/update/${id}`, {
         macAddress: values.macAddress,
@@ -211,7 +204,7 @@ const Data = () => {
         message.success("Device Added");
       })
       .catch((err) => {
-        console.log("ER");
+        // console.log("ER");
         console.log(err);
       });
   };
@@ -225,7 +218,7 @@ const Data = () => {
     localStorage.setItem("macAddress", value);
 
     setMacAddress(localStorage.getItem("macAddress", value));
-    console.log(`selected ${localStorage.getItem("macAddress", value)}`);
+    // console.log(`selected ${localStorage.getItem("macAddress", value)}`);
   }
 
   const getMacAddresses = async () => {
