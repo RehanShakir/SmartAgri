@@ -60,6 +60,7 @@ function Sidenav({ color }) {
   ];
 
   const beforeUpload = (file) => {
+    console.log(file);
     setDta(file);
     console.log("INFOLEreder");
 
