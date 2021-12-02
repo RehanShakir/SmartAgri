@@ -52,17 +52,17 @@ const LineChart = ({ enData, soilData, data }) => {
     series: [
       {
         name: "Termperature",
-        data: temperature.reverse(),
+        data: temperature,
         offsetY: 0,
       },
       {
         name: "Humidity",
-        data: humidity.reverse(),
+        data: humidity,
         offsetY: 0,
       },
       {
         name: "Atmosphereic Pressure",
-        data: atmosphericPressure.reverse(),
+        data: atmosphericPressure,
         offsetY: 0,
       },
     ],
@@ -144,32 +144,32 @@ const LineChart = ({ enData, soilData, data }) => {
     series: [
       {
         name: "Soil Moisture",
-        data: soilMoisture.reverse(),
+        data: soilMoisture,
         offsetY: 0,
       },
       {
         name: "EC",
-        data: eC.reverse(),
+        data: eC,
         offsetY: 0,
       },
       {
         name: "pH",
-        data: pH.reverse(),
+        data: pH,
         offsetY: 0,
       },
       {
         name: "Nitrogen",
-        data: nitrogen.reverse(),
+        data: nitrogen,
         offsetY: 0,
       },
       {
         name: "Phosphorus",
-        data: phosphorus.reverse(),
+        data: phosphorus,
         offsetY: 0,
       },
       {
         name: "Potassium",
-        data: potassium.reverse(),
+        data: potassium,
         offsetY: 0,
       },
     ],
