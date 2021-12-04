@@ -9,7 +9,7 @@ String getSoilMoisture()
 {
 
     value = analogRead(sensor_pin);
-    value = map(value, 550, 0, 0, 100);
+    value = map(value, soil_sensorCalibValues[0], soil_sensorCalibValues[1], 0, 100);
     Serial.print("Moisture : ");
     Serial.print(value);
     Serial.println("%");

@@ -130,6 +130,10 @@ void setup() //main setup functions
 
     setupBME280();
     setupSoilMoisture();
+    pinMode(R1,OUTPUT);
+    pinMode(R2,OUTPUT);
+    pinMode(R3,OUTPUT);
+    
     queue = xQueueCreate(1, sizeof(npkData));
     if (queue == NULL)
     {
