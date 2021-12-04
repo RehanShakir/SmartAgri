@@ -23,7 +23,7 @@ const LineChart = ({ enData, soilData, data }) => {
 
   data.map((d) => {
     // enTime.push(d.createdAt.split("T")[1].split(".")[0].slice(0, 5));
-    enTime.push(d.createdAt);
+    enTime.reverse().push(d.createdAt);
     return 0;
   });
   // console.log(enTime);
