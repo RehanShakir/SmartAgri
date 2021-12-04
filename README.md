@@ -256,6 +256,13 @@ Once done, go to Web App folder
         }
         ```
 
+3.  <span style="color: green">macAddress/relay</span> `(Publish data to control a GPIO(relay/valve) based on SensorNode's MAC Address.) WRITE-ONLY`
+    -   Data will be a string "1", "2" or "3"
+
+3.  <span style="color: green">macAddress/settings</span> `(Publish data to set configuration or calibration based on SensorNode's MAC Address.) WRITE-ONLY`
+    -   The settings field in the dashboard should contain a valid setting as given below
+    1.  "soil_sensor=minLowValue,maxHighValue" (example: soil_sensor=0,550)
+    2.  "device_operation=type (example: device_operation=restart)
 ## API Details <a name = "api"></a>
 
 ### Live Sensor Nodes
