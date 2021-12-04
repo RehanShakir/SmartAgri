@@ -17,12 +17,13 @@ const LineChart = ({ enData, soilData, data }) => {
   let pH = [];
   let nitrogen = [];
   let phosphorus = [];
+  let potassium = [];
 
   let enTime = [];
 
   data.map((d) => {
     // enTime.push(d.createdAt.split("T")[1].split(".")[0].slice(0, 5));
-    enTime.push(d.createdAt);
+    enTime.reverse().push(d.createdAt);
     return 0;
   });
   // console.log(enTime);
@@ -41,6 +42,7 @@ const LineChart = ({ enData, soilData, data }) => {
     pH.push(d.pH);
     nitrogen.push(d.Nitrogen);
     phosphorus.push(d.Phosphorus);
+    potassium.push(d.Potassium);
 
     return 0;
   });
@@ -163,6 +165,11 @@ const LineChart = ({ enData, soilData, data }) => {
       {
         name: "Phosphorus",
         data: phosphorus,
+        offsetY: 0,
+      },
+      {
+        name: "Potassium",
+        data: potassium,
         offsetY: 0,
       },
     ],

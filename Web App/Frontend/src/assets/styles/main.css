@@ -3050,3 +3050,8 @@ section.ant-layout.ant-layout-has-sider.layout-dashboard.layout-profile
   margin-right: 100px;
   padding: 50px;
 }
+
+.btn-publish {
+  padding-left: 11;
+  border-radius: "50px";
+}

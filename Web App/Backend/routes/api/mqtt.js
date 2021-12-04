@@ -9,6 +9,14 @@ const host = "34.214.65.82";
 const port = "1883";
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 const connectUrl = `mqtt://${host}:${port}`;
+const client = mqtt.connect(connectUrl, {
+  clientId,
+  clean: true,
+  connectTimeout: 4000000,
+  username: "hello",
+  password: "hello",
+  reconnectPeriod: 1000000,
+});
 //Get all Devices Data
 router.get("/", async (req, res) => {
   try {
@@ -33,15 +41,6 @@ router.post("/getOne", async (req, res) => {
 });
 router.post("/", async (req, res) => {
   try {
-    const client = mqtt.connect(connectUrl, {
-      clientId,
-      clean: true,
-      connectTimeout: 4000000,
-      username: "hello",
-      password: "hello",
-      reconnectPeriod: 1000000,
-    });
-
     client.on("connect", () => {
       console.log("Connected");
       client.subscribe([topic], () => {
@@ -66,6 +65,30 @@ router.post("/", async (req, res) => {
     res.send("DATA SAVED");
   } catch (err) {
     console.log(err.message);
+  }
+});
+
+router.post("/publish/:macAddress/:button", async (req, res) => {
+  try {
+    let { message } = req.body;
+
+    // console.log(message);
+    console.log(req.params.macAddress);
+    console.log(req.params.button);
+
+    client.publish(
+      `${req.params.macAddress}/${req.params.button}`,
+      message,
+      { qos: 0, retain: false },
+      (error) => {
+        if (error) {
+          console.error(error);
+        }
+      }
+    );
+    return res.status(200).send("Message Published  ");
+  } catch (e) {
+    console.log(e);
   }
 });
 
