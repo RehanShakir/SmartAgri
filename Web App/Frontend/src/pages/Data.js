@@ -257,63 +257,6 @@ const Data = () => {
       <div className="flex-container" style={{ marginBottom: "10px" }}>
         <Button
           type="primary"
-          style={btnPublish}
-          // onClick={executeScroll}
-        >
-          Realy 1
-        </Button>
-        <Button
-          type="primary"
-          style={btnPublish}
-          // onClick={executeScroll}
-        >
-          Realy 2
-        </Button>
-        <Button
-          type="primary"
-          style={btnPublish}
-          // onClick={executeScroll}
-        >
-          Realy 3
-        </Button>
-        <Form
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          layout="vertical"
-          className="row-col"
-        >
-          <Form.Item
-            className="username"
-            label=""
-            name="settings"
-            rules={[
-              {
-                required: true,
-                message: "Please Enter Settings",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Enter Settings"
-              style={{ width: "30%", borderRadius: "50px", marginTop: "10px" }}
-              // style={{ paddingTop: 23.5, paddingBottom: 23.5}}
-            />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={btnPublish}
-              // onClick={executeScroll}
-            >
-              Send Setting
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-      <div className="flex-container" style={{ marginBottom: "10px" }}>
-        <Button
-          type="primary"
           style={{
             paddingLeft: 11,
             borderRadius: "50px",

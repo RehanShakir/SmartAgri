@@ -1,4 +1,4 @@
-import { Menu, Upload, message, Button, Form, Input } from "antd";
+import { Menu, Upload, message, Button, Form, Input, Divider } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
@@ -157,6 +157,8 @@ function Sidenav({ color }) {
           </Form>
         </Menu.Item>
       </Menu>
+      <Divider style={{ marginTop: "5px" }} />
+
       <Button type="primary" style={btnPublish} onClick={handleRe1}>
         Realy 1
       </Button>
@@ -166,6 +168,7 @@ function Sidenav({ color }) {
       <Button type="primary" style={btnPublish} onClick={handleRe3}>
         Realy 3
       </Button>
+      <Divider style={{ marginTop: "40px" }} />
       <Form
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
@@ -185,7 +188,7 @@ function Sidenav({ color }) {
         >
           <Input
             placeholder="Enter Settings"
-            style={{ width: "100%", borderRadius: "50px", marginTop: "50px" }}
+            style={{ width: "100%", borderRadius: "50px", marginTop: "20px" }}
           />
         </Form.Item>
         <Form.Item>
