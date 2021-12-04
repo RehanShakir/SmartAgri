@@ -1,4 +1,4 @@
-import { Menu, Upload, message, Button, Form } from "antd";
+import { Menu, Upload, message, Button, Form, Input, Divider } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
@@ -59,12 +59,54 @@ function Sidenav({ color }) {
     </svg>,
   ];
 
+  const publishToMqtt = (topic, msg) => {
+    let macaddress = localStorage.getItem("macAddress");
+
+    smartAgri
+      .post(`/api/mqtt/publish/${macaddress}/${topic}`, {
+        message: msg,
+      })
+      .then((res) => {
+        console.log(res);
+        setUploadList(false);
+
+        message.success("Message Published");
+      })
+      .catch((err) => {
+        console.log("In err");
+        setUploadList(false);
+        message.error("Cant Upload");
+        console.log(err);
+      });
+  };
+
+  const handleRe1 = () => {
+    publishToMqtt("relay", "1");
+  };
+  const handleRe2 = () => {
+    publishToMqtt("relay", "2");
+  };
+  const handleRe3 = () => {
+    publishToMqtt("relay", "3");
+  };
+  const onFinish = (values) => {
+    console.log(values.settings);
+    publishToMqtt("settings", values.settings);
+  };
+
+  const onFinishFailed = () => {};
   const beforeUpload = (file) => {
     console.log(file);
     setDta(file);
     console.log("INFOLEreder");
 
     return false;
+  };
+  const btnPublish = {
+    marginTop: "20px",
+    // marginLeft: "0px",
+    borderRadius: "50px",
+    width: "100%",
   };
   return (
     <>
@@ -107,7 +149,7 @@ function Sidenav({ color }) {
               <Button
                 type="primary"
                 htmlType="submit"
-                style={{ width: "100%" }}
+                style={{ width: "100%", borderRadius: "50px" }}
               >
                 Submit
               </Button>
@@ -115,6 +157,52 @@ function Sidenav({ color }) {
           </Form>
         </Menu.Item>
       </Menu>
+      <Divider style={{ marginTop: "5px" }} />
+
+      <Button type="primary" style={btnPublish} onClick={handleRe1}>
+        Realy 1
+      </Button>
+      <Button type="primary" style={btnPublish} onClick={handleRe2}>
+        Realy 2
+      </Button>
+      <Button type="primary" style={btnPublish} onClick={handleRe3}>
+        Realy 3
+      </Button>
+      <Divider style={{ marginTop: "40px" }} />
+      <Form
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        layout="vertical"
+        className="row-col"
+      >
+        <Form.Item
+          className="username"
+          label=""
+          name="settings"
+          rules={[
+            {
+              required: true,
+              message: "Please Enter Settings",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Enter Settings"
+            style={{ width: "100%", borderRadius: "50px", marginTop: "20px" }}
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={btnPublish}
+            // onClick={executeScroll}
+            style={{ marginTop: "0px", borderRadius: "50px", width: "100%" }}
+          >
+            Send Settings
+          </Button>
+        </Form.Item>
+      </Form>
     </>
   );
 }

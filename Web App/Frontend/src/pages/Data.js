@@ -1,7 +1,7 @@
-import "../assets/styles/main.css";
 import React, { useEffect, useState, useRef } from "react";
 import history from "../utils/CreateBrowserHistory";
 import LineChart from "../components/chart/LineChart";
+import "../assets/styles/main.css";
 
 import smartAgri from "../api/smartAgri";
 import {
@@ -19,6 +19,12 @@ import {
 } from "antd";
 
 const { Option } = Select;
+
+const btnPublish = {
+  paddingLeft: 11,
+  borderRadius: "50px",
+  marginLeft: "10px",
+};
 
 const Data = () => {
   const myRef = useRef(null);
