@@ -86,7 +86,7 @@ void callback(char *topic, byte *payload, unsigned int length)
         {
             if (pLoad.indexOf("restart=") >= 0)
             {
-                ESP.reset();
+                ESP.restart();
             }
         }
     }

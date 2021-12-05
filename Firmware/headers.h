@@ -10,7 +10,7 @@ String settingsPass;
 #define R2 25
 #define R3 33
 
-int soil_sensorCalibValues[2]={550,0}//low,high
+int soil_sensorCalibValues[2]={550,0};//low,high
 
 #if defined(ARDUINO_ARCH_ESP8266)
 #include <ESP8266WiFi.h>
