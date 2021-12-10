@@ -46,7 +46,7 @@ void setupBME280()
 String getBMEVal()
 {
 
-    String BME_DATA = "";
+    String BME_DATA = "0;0;0";
     if (bmeConnected == 1)
     {
         sensors_event_t temp_event, pressure_event, humidity_event;
@@ -55,29 +55,27 @@ String getBMEVal()
         bme_pressure->getEvent(&pressure_event);
         bme_humidity->getEvent(&humidity_event);
 
-        // Serial.print(F("Temperature = "));
-        // Serial.print(temp_event.temperature);
-        // Serial.println(" *C");
+        Serial.print(F("Temperature = "));
+        Serial.print(temp_event.temperature);
+        Serial.println(" *C");
         BME_DATA += String(temp_event.temperature) + String(";");
 
-        // Serial.print(F("Humidity = "));
-        // Serial.print(humidity_event.relative_humidity);
+        Serial.print(F("Humidity = "));
+        Serial.print(humidity_event.relative_humidity);
         BME_DATA += String(humidity_event.relative_humidity) + String(";");
-        // Serial.println(" %");
+        Serial.println(" %");
 
-        // Serial.print(F("Pressure = "));
-        // Serial.print(pressure_event.pressure);
+        Serial.print(F("Pressure = "));
+        Serial.print(pressure_event.pressure);
         BME_DATA += String(pressure_event.pressure) + String(";");
-        // Serial.println(" hPa");
+        Serial.println(" hPa");
 
         Serial.println();
         delay(1);
-        Serial.println(BME_DATA);
         return BME_DATA;
     }
     else
     {
-        BME_DATA = "0;0;0";
         return BME_DATA;
     }
 }
