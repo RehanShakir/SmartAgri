@@ -50,7 +50,7 @@ fs::SPIFFSFS &FlashFS = SPIFFS;
 #define GET_CHIPID() ((uint16_t)(ESP.getEfuseMac() >> 32))
 
 unsigned long lastPub = 0;
-unsigned int updateInterval = 60*1000;
+unsigned int updateInterval = 5*60*1000;
 
 #define PARAM_FILE "/param.json"
 #define AUX_MQTTSETTING "/mqtt_setting"
