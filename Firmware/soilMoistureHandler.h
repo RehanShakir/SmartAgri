@@ -1,4 +1,4 @@
-int sensor_pin = 2;
+int sensor_pin = 34;
 int value;
 
 void setupSoilMoisture()
