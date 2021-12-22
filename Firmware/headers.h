@@ -6,6 +6,14 @@ String apid;
 String hostName = "SmartA";
 String apPass;
 String settingsPass;
+String settingsMsg="";
+String payloadVal[14]={"0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","Off","Off","Off","null"};
+#define R1 26
+#define R2 25
+#define R3 33
+
+
+int soil_sensorCalibValues[2]={550,0};//low,high
 
 #if defined(ARDUINO_ARCH_ESP8266)
 #include <ESP8266WiFi.h>
@@ -45,7 +53,7 @@ fs::SPIFFSFS &FlashFS = SPIFFS;
 #define GET_CHIPID() ((uint16_t)(ESP.getEfuseMac() >> 32))
 
 unsigned long lastPub = 0;
-unsigned int updateInterval = 2000;
+unsigned int updateInterval = 5*60*1000;
 
 #define PARAM_FILE "/param.json"
 #define AUX_MQTTSETTING "/mqtt_setting"

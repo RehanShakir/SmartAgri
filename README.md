@@ -103,15 +103,9 @@ Here's the complete circuit diagram of the system.
 ![CircuitDiagram](Circuit/Circuit_bb.png)
 
 ## Server Details <a name = "server"></a>
-
-```diff
-- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
-```
-
 ### Monitoring
 
-- pm2 list
-- pm2 monit
+- CapRover
 
 ### List of Packages installed on server
 
@@ -119,6 +113,8 @@ Here's the complete circuit diagram of the system.
 - NodeJS, NPM, Node, NVM
 - PM2
 - ufw
+- Caprover
+- Docker
 - mongod
 - mongo-express
 
@@ -127,21 +123,93 @@ Here's the complete circuit diagram of the system.
 - Node v12.16.1
 - NPM v6.13.4
 
+### Installation of CapRover
+
+#### Pre Reqs
+-   You will need to have a domain name in order to use Caprover.
+-   Ubuntu 20.04/18.04 VPS with atleast 2GB RAM and 100GB Disk Space.
+-   A public IP for VPS.
+
+####  Installation
+
+-   Open the server terminal and execute the following commands
+-   ```sudo apt install ufw```
+-   ```sudo ufw allow 22```
+-   ```sudo ufw allow 1883```
+-   ```ufw allow 80,443,3000,996,7946,4789,2377/tcp; ufw allow 7946,4789,2377/udp;```
+-   ```sudo ufw enable```
+-   ```sudo apt install apt-transport-https ca-certificates curl software-properties-common```
+-   ```curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -```
+-   ```sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"```
+-   ```apt-cache policy docker-ce```
+-   ```sudo apt install docker-ce```
+-   ```sudo systemctl status docker```
+-   The above command will show the status of Dokcer
+-   ```sudo usermod -aG docker ${USER}```
+-   ```su - ${USER}```
+-   ```groups```
+-   The above command should show something like *ubuntu sudo docker*
+-   ```sudo reboot```
+-   Once the server is rebooted run the following commands
+
+##### Step 1
+-   ```docker run -p 80:80 -p 443:443 -p 3000:3000 -v /var/run/docker.sock:/var/run/docker.sock -v /captain:/captain caprover/caprover```
+
+You will see a bunch of outputs on your screen. Once the CapRover is initialized, you can visit http://[IP_OF_YOUR_SERVER]:3000 in your browser and login to CapRover using the default password captain42. You can change your password later. However, do not make any changes in the dashboard. We'll use the command line tool to setup the server.
+##### Step 2
+
+Let's say you own mydomain.com. You can set *.something.mydomain.com as an A-record in your DNS settings to point to the IP address of the server where you installed CapRover. Note that it can take several hours for this change to take into effect. It will show up like this in your DNS configs:
+
+TYPE: A record
+HOST: *.something
+POINTS TO: (IP Address of your server)
+TTL: (doesn't really matter)
+To confirm, go to https://mxtoolbox.com/DNSLookup.aspx and enter randomthing123.something.mydomain.com and check if IP address resolves to the IP you set in your DNS. Note that randomthing123 is needed because you set a wildcard entry in your DNS by setting *.something as your host, not something.
+
+##### Step 3
+Assuming you have npm installed on your local machine (e.g., your laptop), simply run (add sudo if needed):
+
+-   ``` sudo npm install -g caprover```
+  
+Then, run
+
+- ```caprover serversetup```
+
+
+Follow the steps and login to your CapRover instance. When prompted to enter the root domain, enter something.mydomain.com assuming that you set *.something.mydomain.com to point to your IP address in step #2. Now you can access your CapRover from captain.something.mydomain.com
+
+Note: It will not be possible to carry through with the 'caprover serversetup' if you've already forced https on your CapRover instance.
+In such case go straight to logging in with the caprover login command. To change the password go to the settings menu in the app.
+
+#### Deployment
+
+-   Once the CapRover is running, open the dashboard and create 2 new apps named
+1.  smart-agri-backend
+2.  smart-agri-frontend
+
+Then create go to one click apps and search MongoDB and install it with the following settings
+
+-   Name: smart-agri-database
+-   MONGO_INITDB_ROOT_USERNAME: smartAgriDatabase
+-   MONGO_INITDB_ROOT_PASSWORD: sma$r$t$Agr$iD$a$%tabase
+
+Once done, go to Web App folder
+-   Open frontend root, compress everything as .tar using 7zip or tar if using terminal
+-   Open backend folder and again compress everything as .tar
+-   Then in caprover open smart-agri-backend->Deployment->Upload & Deploy your .tar file, do the same for front-end as well.
+
 ### Server Links <a name = "srv"></a>
 
 - MQTT Broker Link: hivemq.com
-- Backend Link: http://sensors.production.rehanshakir.com/
-- Frontend Link:
+- Backend Link: http://smart-agri-backend.iot.intelligadgets.me/
+- Frontend Link: https://smart-agri-frontend.iot.intelligadgets.me/
 
 ### Backend
 
-- Backend is based on NodeJS and it is being managed by PM2. It starts automatically on server start.
+- Backend is based on NodeJS and it is being managed by Caprover. It starts automatically on server start.
 
 ## MQTT Topic Details <a name = "mqtt"></a>
 
-```diff
-- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
-```
 
 ### Topics List
 
@@ -153,92 +221,94 @@ Here's the complete circuit diagram of the system.
 
 1.  <span style="color: green">smart-agri/deviceExists</span> `(Publish DeviceMAC on this topic to check if device exisits in DB) WRITE-ONLY`
     1.  <span style="color: green">smart-agri/deviceExistance</span> `(Response from the above command {null or device MAC}) READ-ONLY`
-2.
-3.  <span style="color: green">smart-agri/createNew</span> `(Publish data to create a new device in DB.) WRITE-ONLY`
 
+2.  <span style="color: green">data/MAC_ADDRESS</span> `(Publish data to update a device in DB based on its MAC Address.) WRITE-ONLY`
+    - Data Format: 
+        ```JSON
+        {
+        "_id":"616fb42d27d2b5351d8a013e",
+        "macAddress":"240AC4AFDBDB9C",
+        "FW_Version":"v1.0",
+        "Environment":
+        [
+            {
+                "Temperautre":12.1,
+                "Humidity":54,
+                "Atmospheric_Pressure":37.78,
+                "_id":"616fb42d27d2b5351d8a013f"
+            }
+        ],
+        "Soil_Parameters":
+        [
+            {
+                "Soil_Moisture":5.44,
+                "EC":87.52,
+                "pH":47.31,
+                "Nitrogen":54.64,
+                "Phosphorus":97.13,
+                "Potassium":51.03,
+                "_id":"616fb42d27d2b5351d8a0140"
+            }
+        ],
+        "createdAt":"2021-10-20T06:16:13.901Z",
+        "updatedAt":"2021-10-20T06:16:13.901Z",
+        "__v":0
+        }
+        ```
 
-    - Data Format: DeviceMAC;SENSORS_LIST
+3.  <span style="color: green">macAddress/relay</span> `(Publish data to control a GPIO(relay/valve) based on SensorNode's MAC Address.) WRITE-ONLY`
+    -   Data will be a string "1", "2" or "3"
 
-4.  <span style="color: green">smart-agri/updateDevice</span> `(Publish data to update a device in DB based on its MAC Address.) WRITE-ONLY`
-    - Data Format: DeviceMAC;SENSORS_LIST
-
+3.  <span style="color: green">macAddress/settings</span> `(Publish data to set configuration or calibration based on SensorNode's MAC Address.) WRITE-ONLY`
+    -   The settings field in the dashboard should contain a valid setting as given below
+    1.  "soil_sensor=minLowValue,maxHighValue" (example: soil_sensor=0,550)
+    2.  "device_operation=type (example: device_operation=restart)
 ## API Details <a name = "api"></a>
 
-```diff
-- Routes
-*   /api/users
-*   /api/mqtt
-```
-
-<!-- ### Admin Login
+### Live Sensor Nodes
 
 ```http
-POST http://34.214.65.82:8080/v1/loginAdmin
+POST http://smart-agri-backend.iot.intelligadgets.me/api/mqtt
 ```
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `Email` | `string` | **Required**.  *Email address of the admin*|
-| `Password` | `string` | **Required**.  *Password of the admin*|
+| Parameter | Type      | Description |
+| :-------- | :-------- | :---------- |
+| `nothing` | `nothing` | nothing     |
 
-### Update Admin
+-   Returns the list of live sensor nodes
+
+### Users Register
+
 
 ```http
-POST http://34.214.65.82:8080/v1/updateAdmin
+POST http://smart-agri-backend.iot.intelligadgets.me/api/users/register
 ```
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `Email` | `string` | **Required**.  *Email address of the admin*|
-| `Password` | `string` | **Required**.  *Password of the admin*|
+| Parameter  | Type            | Description                              |
+| :--------- | :-------------- | :--------------------------------------- |
+| `email`    | `email address` | **required** enter a valid email address |
+| `password` | `password`      | **required** enter a password            |
 
-### List Admins
+-   User registration
+
+
+### Users Register
+
 
 ```http
-GET http://34.214.65.82:8080/v1/listAll
+POST http://smart-agri-backend.iot.intelligadgets.me/api/users/login
 ```
 
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-```nothing```
+| Parameter  | Type            | Description                              |
+| :--------- | :-------------- | :--------------------------------------- |
+| `email`    | `email address` | **required** enter a valid email address |
+| `password` | `password`      | **required** enter a password            |
 
-### Ledger Log
-
-```http
-POST http://34.214.65.82:8080/v1/ledgerLog
-```
-
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-```nothing```
-
-### Add New Device
-
-```http
-POST http://34.214.65.82:8080/v1/addNewDevice
-```
-
-| Parameter | Type | Description |
-| :--- | :--- | :--- |
-| `DeviceMAC` | `string` | **Required**.  *Email address of the Device*|
-| `StartSession` | `string` | **Required**.  *StartSession of the Device*|
-| `EndSession` | `string` | **Required**.  *EndSession of the Device*|
-| `EndSessionType` | `string` | **Required**.  *EndSessionType of the Device*|
-| `Temperature` | `string` | **Required**.  *Temperature of the Device*|
-| `SensorFilters` | `string` | **Required**.  *SensorFilters of the Device*|
-| `LampMaintenance` | `string` | **Required**.  *LampMaintenance of the Device*|
-| `AnnualMaintenance` | `string` | **Required**.  *AnnualMaintenance of the Device*|
-| `PowerFactorCorrection` | `string` | **Required**.  *PowerFactorCorrection of the Device*|
-| `AnemometerSensor` | `string` | **Required**.  *AnemometerSensor of the Device*|
-| `InputVoltage` | `string` | **Required**.  *InputVoltage of the Device*|
-| `PresencePhases` | `string` | **Required**.  *PresencePhases of the Device*|
-| `Timestamp` | `string` | **NOT Required**.  *Timestamp of the Device*| -->
+-   User login
 
 ### Responses
 
-```diff
-- [THIS SETCTION WILL BE IMPLEMENTED/UPDATED IN THE UPCOMING MILESTONES]
-```
+
 
 Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, Gophish returns a JSON response in the following format:
 
@@ -255,7 +325,7 @@ The `status` attribute describes if the transaction was successful or not.
 
 ### Status Codes
 
-IoTManagementSystem Backend returns the following status codes in its API:
+SmartAgri Backend returns the following status codes in its API:
 
 | Status Code | Description             |
 | :---------- | :---------------------- |
@@ -273,16 +343,21 @@ IoTManagementSystem Backend returns the following status codes in its API:
         1.  Email Address: **admin@admin.com**
         2.  Password: **admin**
 
-Dashboard Login Page![SCRD1](Circuit/scrd1.png)
-Dashboard Home Page![SCRD2](Circuit/scrd2.png)
-Dashboard Profile Page![SCRD3](Circuit/scrd3.png) 3. You can also download the logs in CSV format from the dashboard home page. 4. Power on your ESP32, it will present you with an AP named `SmartA-abc` (while `SmartA` can be changed in the portal and `abc` is a unique id for each esp32) 5. Default captive portal password `12345678AP` which can be changed in captive portal. 6. Connect to the ESP32 access point and open the web-browser and navigate to the link `http://esp32.local/_ac`. This link will work on most of the operating systems but if your operating system is not allowing to open it, you may want to check the captive portal IP Address from the serial monitor and can use that IP address inplace of the above mentioned URL. 7. The default access IP Address is `http://192.168.4.1/_ac` 8. You will be presented with a main dashboard as shown below(based on your device)
+Dashboard Login Page![SCRD1](artwork/sc1.png)
+Dashboard Signup Page![SCRD2](artwork/sc2.png)
+Dashboard Home Page![SCRD3](artwork/sc3.png)
+png) 
+4. Power on your ESP32, it will present you with an AP named `SmartA-abc` (while `SmartA` can be changed in the portal and `abc` is a unique id for each esp32)
+5. Default captive portal password `12345678AP` which can be changed in captive portal. 
+6. Connect to the ESP32 access point and open the web-browser and navigate to the link `http://esp32.local/_ac`. This link will work on most of the operating systems but if your operating system is not allowing to open it, you may want to check the captive portal IP Address from the serial monitor and can use that IP address inplace of the above mentioned URL. 
+7. The default access IP Address is `http://192.168.4.1/_ac` 8. You will be presented with a main dashboard as shown below(based on your device)
 ![SCR1](Circuit/scr1.png)
 
-9.  Once connected to a WiFi network, you can again access the captive portal using same URL or the IP Address from the Serial monitor.
-10. The data is published to the MQTT Topic `SmartA/{hostname}` while the hostname is the one which you can define in Settings page of the captive portal.
-11. You can open settings page with following default credentials
-12. User: **AP Name (SmartA)**
-13. Password: **admin**
+8.  Once connected to a WiFi network, you can again access the captive portal using same URL or the IP Address from the Serial monitor.
+9.  The data is published to the MQTT Topic `SmartA/{hostname}` while the hostname is the one which you can define in Settings page of the captive portal.
+10.  You can open settings page with following default credentials
+     1.  User: **AP Name (SmartA)**
+     2.  Password: **admin**
 
 ## List of Components <a name = "list"></a>
 

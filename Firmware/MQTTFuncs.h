@@ -5,11 +5,19 @@ void reconnect();
 bool mqttConnect();
 void mqttPublish(String path, String msg);
 int deviceExisits = 0;
+IPAddress ip(34, 214, 65, 82);
+String topicN = String("smart-agri/deviceExistance");
+String topicR = ss.getMacAddress() + String("/relay");
+String topicS = ss.getMacAddress() + String("/settings");
 void MQTTUnSubscribe()
 {
-    String topicN = String("smart-agri/deviceExistance");
+    // String topicN = String("smart-agri/deviceExistance");
+    // String topicR = ss.getMacAddress() + String("/relay");
+    // String topicS = ss.getMacAddress() + String("/settings");
 
     mqttClient.unsubscribe(topicN.c_str());
+    mqttClient.unsubscribe(topicR.c_str());
+    mqttClient.unsubscribe(topicS.c_str());
 }
 void MQTTSubscriptions()
 {
@@ -18,9 +26,10 @@ void MQTTSubscriptions()
     // for(int i=0;i<10;i++){
     //   IMEIsList[i]==String("NA");
     // }
-    String topicN = String("smart-agri/deviceExistance");
 
     mqttClient.subscribe(topicN.c_str());
+    mqttClient.subscribe(topicR.c_str());
+    mqttClient.subscribe(topicS.c_str());
 }
 void callback(char *topic, byte *payload, unsigned int length)
 {
@@ -28,6 +37,33 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.print(topic);
     Serial.print("] ");
     String pLoad = "";
+    if (digitalRead(R1) == 1)
+    {
+        payloadVal[9] = "On";
+    }
+    else
+    {
+        payloadVal[9] = "Off";
+    }
+
+    if (digitalRead(R2) == 1)
+    {
+        payloadVal[10] = "On";
+    }
+    else
+    {
+        payloadVal[10] = "Off";
+    }
+
+    if (digitalRead(R3) == 1)
+    {
+        payloadVal[11] = "On";
+    }
+    else
+    {
+        payloadVal[11] = "Off";
+    }
+
     for (int i = 0; i < length; i++)
     {
         Serial.print((char)payload[i]);
@@ -47,18 +83,45 @@ void callback(char *topic, byte *payload, unsigned int length)
             deviceExisits = 1;
         }
     }
+    else if (String(topic) == topicR)
+    {
+        sendData(payloadVal[0], payloadVal[1], payloadVal[2], payloadVal[3], payloadVal[4], payloadVal[5], payloadVal[6], payloadVal[7], payloadVal[8], payloadVal[9],payloadVal[10],payloadVal[11], settingsMsg);
+        if (pLoad.indexOf("1") >= 0)
+        {
+            digitalWrite(R1, !digitalRead(R1));
+        }
+        if (pLoad.indexOf("2") >= 0)
+        {
+            digitalWrite(R2, !digitalRead(R2));
+        }
+        if (pLoad.indexOf("3") >= 0)
+        {
+            digitalWrite(R3, !digitalRead(R3));
+        }
+    }
+
+    else if (String(topic) == topicS)
+    {
+        sendData(payloadVal[0], payloadVal[1], payloadVal[2], payloadVal[3], payloadVal[4], payloadVal[5], payloadVal[6], payloadVal[7], payloadVal[8], payloadVal[9],payloadVal[10],payloadVal[11], pLoad);
+        if (pLoad.indexOf("soil_sensor=") >= 0)
+        {
+            String temp = ss.StringSeparator(pLoad, '=', 1);
+            String lowV = ss.StringSeparator(temp, ',', 0);
+            String highV = ss.StringSeparator(temp, ',', 1);
+            soil_sensorCalibValues[0] = lowV.toInt();
+            soil_sensorCalibValues[1] = highV.toInt();
+        }
+        else if (pLoad.indexOf("device_operation=") >= 0)
+        {
+            if (pLoad.indexOf("restart=") >= 0)
+            {
+                ESP.restart();
+            }
+        }
+    }
 
     // Switch on the LED if an 1 was received as first character
-    if ((char)payload[0] == '1')
-    {
-        digitalWrite(BUILTIN_LED, LOW); // Turn the LED on (Note that LOW is the voltage level
-                                        // but actually the LED is on; this is because
-                                        // it is active low on the ESP-01)
-    }
-    else
-    {
-        digitalWrite(BUILTIN_LED, HIGH); // Turn the LED off by making the voltage HIGH
-    }
+
     pLoad = "";
 }
 void reconnect()
@@ -101,8 +164,9 @@ bool mqttConnect()
         if (String(mqtt_server).length() <= 0)
             break;
 
-        mqttClient.setServer(mqtt_server, 1883);
+        mqttClient.setServer(ip, 1883);
         mqttClient.setCallback(callback);
+        mqttClient.setBufferSize(2024);
         Serial.println(String("Attempting MQTT broker:") + String("smart-agri Broker"));
         internetStatus = "Connecting...";
 

@@ -5,6 +5,9 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@auth0/auth0-react": "^1.8.0",
+    "@capacitor/android": "3.3.1",
+    "@capacitor/core": "^3.3.1",
+    "@capacitor/ios": "3.3.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -44,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^3.3.1"
   }
 }
