@@ -37,6 +37,33 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.print(topic);
     Serial.print("] ");
     String pLoad = "";
+    if (digitalRead(R1) == 1)
+    {
+        payloadVal[9] = "On";
+    }
+    else
+    {
+        payloadVal[9] = "Off";
+    }
+
+    if (digitalRead(R2) == 1)
+    {
+        payloadVal[10] = "On";
+    }
+    else
+    {
+        payloadVal[10] = "Off";
+    }
+
+    if (digitalRead(R3) == 1)
+    {
+        payloadVal[11] = "On";
+    }
+    else
+    {
+        payloadVal[11] = "Off";
+    }
+
     for (int i = 0; i < length; i++)
     {
         Serial.print((char)payload[i]);
@@ -58,6 +85,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     }
     else if (String(topic) == topicR)
     {
+        sendData(payloadVal[0], payloadVal[1], payloadVal[2], payloadVal[3], payloadVal[4], payloadVal[5], payloadVal[6], payloadVal[7], payloadVal[8], payloadVal[9],payloadVal[10],payloadVal[11], settingsMsg);
         if (pLoad.indexOf("1") >= 0)
         {
             digitalWrite(R1, !digitalRead(R1));
@@ -74,6 +102,7 @@ void callback(char *topic, byte *payload, unsigned int length)
 
     else if (String(topic) == topicS)
     {
+        sendData(payloadVal[0], payloadVal[1], payloadVal[2], payloadVal[3], payloadVal[4], payloadVal[5], payloadVal[6], payloadVal[7], payloadVal[8], payloadVal[9],payloadVal[10],payloadVal[11], pLoad);
         if (pLoad.indexOf("soil_sensor=") >= 0)
         {
             String temp = ss.StringSeparator(pLoad, '=', 1);
@@ -137,6 +166,7 @@ bool mqttConnect()
 
         mqttClient.setServer(ip, 1883);
         mqttClient.setCallback(callback);
+        mqttClient.setBufferSize(2024);
         Serial.println(String("Attempting MQTT broker:") + String("smart-agri Broker"));
         internetStatus = "Connecting...";
 

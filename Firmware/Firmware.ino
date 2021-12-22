@@ -1,11 +1,12 @@
-#include "headers.h"   //all misc. headers and functions
+#include "headers.h" //all misc. headers and functions
+#include "dataHandler.h"
 #include "MQTTFuncs.h" //MQTT related functions
 #include "webApp.h"    //Captive Portal webpages
 #include <FS.h>        //ESP32 File System
 #include "commHandler.h"
 #include "BMEHandler.h"
 #include "soilMoistureHandler.h"
-#include "dataHandler.h"
+
 IPAddress ipV(192, 168, 4, 1);
 char npkData[2024] = {"0.0,0.0,0.0"};
 TaskHandle_t npkTask;
@@ -130,10 +131,12 @@ void setup() //main setup functions
 
     setupBME280();
     setupSoilMoisture();
-    pinMode(R1,OUTPUT);
-    pinMode(R2,OUTPUT);
-    pinMode(R3,OUTPUT);
-    
+    Serial.print("MAC Address: ");
+    Serial.println(ss.getMacAddress());
+    pinMode(R1, OUTPUT);
+    pinMode(R2, OUTPUT);
+    pinMode(R3, OUTPUT);
+
     queue = xQueueCreate(1, sizeof(npkData));
     if (queue == NULL)
     {
@@ -283,8 +286,47 @@ void loop()
         // mqttPublish("smart-agri/" + String(hostName) + String("soilMoisture/"), String(getSoilMoisture())); //publish data to mqtt broker
         String bme = getBMEVal();
         getNPKData();
+        payloadVal[0] = ss.StringSeparator(bme, ';', 0);
+        payloadVal[1] = ss.StringSeparator(bme, ';', 1);
+        payloadVal[2] = ss.StringSeparator(bme, ';', 2);
+        payloadVal[3] = String(getSoilMoisture());
+        payloadVal[4] = String("0.0");
+        payloadVal[5] = String("0.0");
+        payloadVal[6] = getN();
+        payloadVal[7] = getP();
+        payloadVal[8] = getK();
 
-        sendData(ss.StringSeparator(bme, ';', 0), ss.StringSeparator(bme, ';', 1), ss.StringSeparator(bme, ';', 2), String(getSoilMoisture()), String("0.0"), String("0.0"), getN(), getP(), getK());
+        if (digitalRead(R1) == 1)
+        {
+            payloadVal[9] = "On";
+        }
+        else
+        {
+            payloadVal[9] = "Off";
+        }
+
+        if (digitalRead(R2) == 1)
+        {
+            payloadVal[10] = "On";
+        }
+        else
+        {
+            payloadVal[10] = "Off";
+        }
+
+        if (digitalRead(R3) == 1)
+        {
+            payloadVal[11] = "On";
+        }
+        else
+        {
+            payloadVal[11] = "Off";
+        }
+
+      
+        payloadVal[12] = settingsMsg;
+
+        sendData(ss.StringSeparator(bme, ';', 0), ss.StringSeparator(bme, ';', 1), ss.StringSeparator(bme, ';', 2), String(getSoilMoisture()), String("0.0"), String("0.0"), getN(), getP(), getK(), payloadVal[9],payloadVal[10],payloadVal[11], settingsMsg);
         //send values
         ledState(ACTIVE_MODE);
 

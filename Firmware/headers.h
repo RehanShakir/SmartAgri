@@ -6,9 +6,12 @@ String apid;
 String hostName = "SmartA";
 String apPass;
 String settingsPass;
+String settingsMsg="";
+String payloadVal[14]={"0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","0.0","Off","Off","Off","null"};
 #define R1 26
 #define R2 25
 #define R3 33
+
 
 int soil_sensorCalibValues[2]={550,0};//low,high
 

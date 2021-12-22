@@ -1,9 +1,9 @@
 //{"FW_Version":"v1.0","macAddress":"240AC4AFDBDB9C","Environment":[{"Temperautre":29.3,"Humidity":62,"Atmospheric_Pressure":34}],"SoilParameters":[{"Soil_Moisture":0,"EC":0,"pH":0,"Nitrogen":0,"Phosphorus":0,"Potassium":0}]}
 #include <ArduinoJson.h>
-DynamicJsonDocument doc(1024);
+DynamicJsonDocument doc(2024);
 
-char jsonDoc[1024];
-void genJSON(String temp = String("0.0"), String humid = String("0.0"), String pressure = String("0.0"), String soil_moisture = String("0.0"), String ec = String("0.0"), String ph = String("0.0"), String nitrogen = String("0.0"), String phosphorus = String("0.0"), String potassium = String("0.0"))
+char jsonDoc[2024];
+void genJSON(String temp = String("0.0"), String humid = String("0.0"), String pressure = String("0.0"), String soil_moisture = String("0.0"), String ec = String("0.0"), String ph = String("0.0"), String nitrogen = String("0.0"), String phosphorus = String("0.0"), String potassium = String("0.0"),String rel1=String("Off"), String rel2=String("Off"), String rel3=String("Off"),String msg=String("Off"))
 {
 
     // doc["Timestamp"] = String("12/2/2 03:11:33");
@@ -11,6 +11,10 @@ void genJSON(String temp = String("0.0"), String humid = String("0.0"), String p
     doc["FW_Version"] = String("v1.0");
 
     doc["macAddress"] = ss.getMacAddress();
+    doc["relay1"] = rel1;
+    doc["relay2"] = rel2;
+    doc["relay3"] = rel3;
+    doc["msg"] = msg;
     doc["Environment"][0]["Temperautre"] = temp.toFloat();
     doc["Environment"][0]["Humidity"] = humid.toFloat();
     doc["Environment"][0]["Atmospheric_Pressure"] = pressure.toFloat();
@@ -24,9 +28,9 @@ void genJSON(String temp = String("0.0"), String humid = String("0.0"), String p
     serializeJson(doc, Serial);
 }
 
-void sendData(String temp = String("0.0"), String humid = String("0.0"), String pressure = String("0.0"), String soil_moisture = String("0.0"), String ec = String("0.0"), String ph = String("0.0"), String nitrogen = String("0.0"), String phosphorus = String("0.0"), String potassium = String("0.0"))
+void sendData(String temp = String("0.0"), String humid = String("0.0"), String pressure = String("0.0"), String soil_moisture = String("0.0"), String ec = String("0.0"), String ph = String("0.0"), String nitrogen = String("0.0"), String phosphorus = String("0.0"), String potassium = String("0.0"),String rel1=String("Off"), String rel2=String("Off"), String rel3=String("Off"),String msg=String("Off"))
 {
-    genJSON(temp, humid, pressure, soil_moisture, ec, ph, nitrogen, phosphorus, potassium);
+    genJSON(temp, humid, pressure, soil_moisture, ec, ph, nitrogen, phosphorus, potassium, rel1, rel2, rel3, msg);
     serializeJson(doc, jsonDoc);
     String topicP = String("data/") + ss.getMacAddress();
     Serial.print("Publishing on: ");
