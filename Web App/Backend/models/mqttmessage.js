@@ -8,6 +8,19 @@ let mqttMessageSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    relay1: {
+      type: String,
+    },
+    relay2: {
+      type: String,
+    },
+    relay3: {
+      type: String,
+    },
+    msg: {
+      type: String,
+    },
+
     FW_Version: {
       type: String,
     },

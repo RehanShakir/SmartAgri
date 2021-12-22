@@ -160,13 +160,13 @@ function Sidenav({ color }) {
       <Divider style={{ marginTop: "5px" }} />
 
       <Button type="primary" style={btnPublish} onClick={handleRe1}>
-        Realy 1
+        Relay 1
       </Button>
       <Button type="primary" style={btnPublish} onClick={handleRe2}>
-        Realy 2
+        Relay 2
       </Button>
       <Button type="primary" style={btnPublish} onClick={handleRe3}>
-        Realy 3
+        Relay 3
       </Button>
       <Divider style={{ marginTop: "40px" }} />
       <Form

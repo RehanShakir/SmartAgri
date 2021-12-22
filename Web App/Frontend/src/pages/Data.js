@@ -4,6 +4,7 @@ import LineChart from "../components/chart/LineChart";
 import "../assets/styles/main.css";
 
 import smartAgri from "../api/smartAgri";
+
 import {
   Row,
   Col,
@@ -16,6 +17,7 @@ import {
   Form,
   message,
   Select,
+  Descriptions,
 } from "antd";
 
 const { Option } = Select;
@@ -29,15 +31,22 @@ const btnPublish = {
 const Data = () => {
   const myRef = useRef(null);
   const myRef1 = useRef(null);
+  const myRef2 = useRef(null);
 
   const [data, setData] = useState([]);
   const [macAddress, setMacAddress] = useState("");
+  const [alarm, setAlarm] = useState("");
   const [userMacAddress, setUserMacAddress] = useState([]);
+  const [relay1, setRelay1] = useState("");
+  const [relay2, setRelay2] = useState("");
+  const [relay3, setRelay3] = useState("");
+  const [msg, setMsg] = useState("");
 
   // let intervalId = null;
 
   const executeScroll = () => myRef.current.scrollIntoView();
   const executeScroll1 = () => myRef1.current.scrollIntoView();
+  const executeScroll2 = () => myRef2.current.scrollIntoView();
 
   const useInterval = (callback, delay) => {
     const savedCallback = useRef();
@@ -58,26 +67,34 @@ const Data = () => {
       }
     }, [delay]);
   };
+  const agriData = () => {
+    // console.log("Calling");
+    smartAgri
+      .post("/api/mqtt/getOne", {
+        macAddress: localStorage.getItem("macAddress"),
+      })
+      .then((res) => {
+        // console.log("Sucess");
+        let lastIndex = res.data.length - 1;
+        console.log(res.data[lastIndex].msg);
+        console.log(res.data[lastIndex]);
+        setRelay1(res.data[lastIndex].relay1);
+        setRelay2(res.data[lastIndex].relay2);
+        setRelay3(res.data[lastIndex].relay3);
+        setMsg(res.data[lastIndex].msg);
+
+        setData(res.data.reverse());
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   useEffect(() => {
     if (localStorage.getItem("user-info")) {
       history.push("/tables");
     }
     // console.log("In USE");
-    const agriData = () => {
-      // console.log("Calling");
-      smartAgri
-        .post("/api/mqtt/getOne", {
-          macAddress: localStorage.getItem("macAddress"),
-        })
-        .then((res) => {
-          // console.log("Sucess");
-          // console.log(res.data.macAddress);
-          setData(res.data.reverse());
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
+
     agriData();
   }, [macAddress]);
   useEffect(() => {}, [data]);
@@ -91,12 +108,20 @@ const Data = () => {
         // console.log("Sucess");
         // localStorage.setItem("macAddress", JSON.stringify(macAddress));
         // console.log(res.data);
+        let lastIndex = res.data.length - 1;
+
+        setRelay1(res.data[lastIndex].relay1);
+        setRelay2(res.data[lastIndex].relay2);
+        setRelay3(res.data[lastIndex].relay3);
+        setMsg(res.data[lastIndex].msg);
         setData(res.data.reverse());
       })
       .catch((err) => {
         console.log(err);
       });
   }, 1000 * 60);
+
+  // console.log(data);
 
   const environmentData = data.map((d) => {
     return d.Environment[0];
@@ -108,78 +133,270 @@ const Data = () => {
   const environmentCol = [
     {
       title: "Date/Time",
-      dataIndex: "Time",
+      // dataIndex: "Time",
       key: "Time",
+      render: (record) => {
+        return record.Time.substring(0, record.Time.indexOf("("));
+      },
     },
     {
       title: "Temperature",
-      dataIndex: "Temperautre",
+      // dataIndex: "Temperautre",
       key: "Temprature",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("temperatureMax") ||
+                  localStorage.getItem("temperatureMin")) == 0
+                  ? ""
+                  : record.Temperautre > localStorage.getItem("temperatureMax")
+                  ? "red"
+                  : record.Temperautre < localStorage.getItem("temperatureMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Temperautre,
+        };
+      },
     },
     {
       title: "Humidity",
-      dataIndex: "Humidity",
+      // dataIndex: "Humidity",
       key: "humidity",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("humidityMax") ||
+                  localStorage.getItem("humidityMin")) == 0
+                  ? ""
+                  : record.Humidity > localStorage.getItem("humidityMax")
+                  ? "red"
+                  : record.Humidity < localStorage.getItem("humidityMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Humidity,
+        };
+      },
     },
 
     {
       title: "Atmosphereic Pressure",
+      align: "center",
       key: "atmosphericpressure",
-      dataIndex: "Atmospheric_Pressure",
+      // dataIndex: "Atmospheric_Pressure",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("atmosphereicPressureMax") ||
+                  localStorage.getItem("atmosphereicPressureMin")) == 0
+                  ? ""
+                  : record.Atmospheric_Pressure >
+                    localStorage.getItem("atmosphereicPressureMax")
+                  ? "red"
+                  : record.Atmospheric_Pressure <
+                    localStorage.getItem("atmosphereicPressureMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Atmospheric_Pressure,
+        };
+      },
     },
   ];
 
   const soilCol = [
     {
       title: "Date/Time",
-      dataIndex: "Time",
+      // dataIndex: "Time",
       key: "Time",
+
+      render: (record) => {
+        return record.Time.substring(0, record.Time.indexOf("("));
+      },
     },
     {
       title: "Soil Moisture",
-      dataIndex: "Soil_Moisture",
+      align: "center",
+      // dataIndex: "Soil_Moisture",
       key: "Soil_Moisture",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("soilMoistureMax") ||
+                  localStorage.getItem("soilMoistureMin")) == 0
+                  ? ""
+                  : record.Soil_Moisture >
+                    localStorage.getItem("soilMoistureMax")
+                  ? "red"
+                  : record.Soil_Moisture <
+                    localStorage.getItem("soilMoistureMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Soil_Moisture,
+        };
+      },
     },
     {
       title: "EC",
-      dataIndex: "EC",
+      // dataIndex: "EC",
       key: "EC",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("ecMax") ||
+                  localStorage.getItem("ecMin")) == 0
+                  ? ""
+                  : record.EC > localStorage.getItem("ecMax")
+                  ? "red"
+                  : record.EC < localStorage.getItem("ecMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.EC,
+        };
+      },
     },
     {
       title: "pH",
-      dataIndex: "pH",
+      // dataIndex: "pH",
       key: "pH",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("phMax") ||
+                  localStorage.getItem("phMin")) == 0
+                  ? ""
+                  : record.pH > localStorage.getItem("phMax")
+                  ? "red"
+                  : record.pH < localStorage.getItem("phMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.pH,
+        };
+      },
     },
     {
       title: "Nitrogen",
-      dataIndex: "Nitrogen",
+      // dataIndex: "Nitrogen",
       key: "Nitrogen",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("nitrogenMax") ||
+                  localStorage.getItem("nitrogenMin")) == 0
+                  ? ""
+                  : record.Nitrogen > localStorage.getItem("nitrogenMax")
+                  ? "red"
+                  : record.Nitrogen < localStorage.getItem("nitrogenMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Nitrogen,
+        };
+      },
     },
     {
       title: "Phosphorus",
-      dataIndex: "Phosphorus",
+      // dataIndex: "Phosphorus",
       key: "Phosphorus",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("phosphorusMax") ||
+                  localStorage.getItem("phosphorusMin")) == 0
+                  ? ""
+                  : record.Phosphorus > localStorage.getItem("phosphorusMax")
+                  ? "red"
+                  : record.Phosphorus < localStorage.getItem("phosphorusMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Phosphorus,
+        };
+      },
     },
     {
       title: "Potassium",
-      dataIndex: "Potassium",
+      // dataIndex: "Potassium",
       key: "Potassium",
+      align: "center",
+      render: (record) => {
+        return {
+          props: {
+            style: {
+              background:
+                (localStorage.getItem("potassiumMax") ||
+                  localStorage.getItem("potassiumMin")) == 0
+                  ? ""
+                  : record.Potassium > localStorage.getItem("potassiumMax")
+                  ? "red"
+                  : record.Potassium < localStorage.getItem("potassiumMin")
+                  ? "red"
+                  : "",
+            },
+          },
+          children: record.Potassium,
+        };
+      },
     },
   ];
 
   //Modal Functions
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisibleAlarm, setIsModalVisibleAlarm] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
+  };
+  const showModalAlarm = () => {
+    setIsModalVisibleAlarm(true);
   };
 
   const handleOk = () => {
     setIsModalVisible(false);
   };
+  const handleOkAlarm = () => {
+    setIsModalVisibleAlarm(false);
+  };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+  };
+  const handleCancelAlarm = () => {
+    setIsModalVisibleAlarm(false);
   };
 
   const getIdofLoggedInUser = () => {
@@ -213,9 +430,45 @@ const Data = () => {
         // console.log("ER");
         console.log(err);
       });
+
+    await smartAgri
+      .post(`/api/alarm/set/${values.macAddress}`, {
+        max: 0,
+        min: 0,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const onFinishAlarm = async (values) => {
+    localStorage.setItem(`${alarm}Max`, values.max);
+    localStorage.setItem(`${alarm}Min`, values.min);
+    console.log(values.min);
+
+    await smartAgri
+      .put(`/api/alarm/set/${alarm}/${localStorage.getItem("macAddress")}`, {
+        max: values.max,
+        min: values.min,
+      })
+      .then((res) => {
+        setIsModalVisibleAlarm(false);
+
+        console.log(res);
+        agriData();
+        message.success("Updated");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+  const onFinishFailedAlarm = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
@@ -224,6 +477,40 @@ const Data = () => {
     localStorage.setItem("macAddress", value);
 
     setMacAddress(localStorage.getItem("macAddress", value));
+
+    smartAgri
+      .get(`/api/alarm/${value}`)
+      .then((res) => {
+        console.log(res.data);
+        localStorage.setItem("temperatureMax", res.data.temperature.max);
+        localStorage.setItem("temperatureMin", res.data.temperature.min);
+        localStorage.setItem("humidityMax", res.data.humidity.max);
+        localStorage.setItem("humidityMin", res.data.humidity.min);
+        localStorage.setItem(
+          "atmosphereicPressureMax",
+          res.data.atmosphereicPressure.max
+        );
+        localStorage.setItem(
+          "atmosphereicPressureMin",
+          res.data.atmosphereicPressure.min
+        );
+        localStorage.setItem("soilMoistureMax", res.data.soilMoisture.max);
+        localStorage.setItem("soilMoistureMin", res.data.soilMoisture.min);
+        localStorage.setItem("ecMax", res.data.ec.max);
+        localStorage.setItem("ecMin", res.data.ec.min);
+        localStorage.setItem("phMax", res.data.ph.max);
+        localStorage.setItem("phMin", res.data.ph.min);
+        localStorage.setItem("nitrogenMax", res.data.nitrogen.max);
+        localStorage.setItem("nitrogenMin", res.data.nitrogen.min);
+        localStorage.setItem("phosphorusMax", res.data.phosphorus.max);
+        localStorage.setItem("phosphorusMin", res.data.phosphorus.min);
+        localStorage.setItem("potassiumMax", res.data.potassium.max);
+        localStorage.setItem("potassiumMin", res.data.potassium.min);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     // console.log(`selected ${localStorage.getItem("macAddress", value)}`);
   }
 
@@ -238,6 +525,11 @@ const Data = () => {
       .catch((err) => {
         console.log(err);
       });
+  };
+
+  const handleChangeAlarm = (value) => {
+    console.log(value);
+    setAlarm(value);
   };
 
   const renderedOptions = userMacAddress.map((macadd) => {
@@ -271,10 +563,21 @@ const Data = () => {
             marginLeft: "10px",
             borderRadius: "50px",
           }}
+          onClick={executeScroll2}
+        >
+          Actuators
+        </Button>
+        <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
+            borderRadius: "50px",
+          }}
           onClick={executeScroll1}
         >
           Charts
         </Button>
+
         <Button
           type="primary"
           className="addDevicebtn"
@@ -291,6 +594,7 @@ const Data = () => {
           visible={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
+          destroyOnClose
         >
           <Form
             onFinish={onFinish}
@@ -311,6 +615,98 @@ const Data = () => {
             >
               <Input
                 placeholder="Enter MacAddress"
+                style={{ paddingTop: 23.5, paddingBottom: 23.5 }}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ width: "100%" }}
+              >
+                Add
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Button
+          type="primary"
+          className="addDevicebtn"
+          onClick={showModalAlarm}
+          style={{
+            marginLeft: "10px",
+            borderRadius: "50px",
+          }}
+        >
+          Set Alarm
+        </Button>
+        <Modal
+          title="Add Alarm"
+          visible={isModalVisibleAlarm}
+          onOk={handleOkAlarm}
+          onCancel={handleCancelAlarm}
+          destroyOnClose
+        >
+          <Form
+            onFinish={onFinishAlarm}
+            onFinishFailed={onFinishFailedAlarm}
+            layout="vertical"
+            className="row-col"
+          >
+            <Select
+              defaultValue="select"
+              className="mac-search"
+              style={{
+                width: "100%",
+                borderRadius: "150px",
+                marginBottom: "15px",
+              }}
+              onChange={handleChangeAlarm}
+            >
+              <Option value="select">Select</Option>
+              <Option value="temperature">Temperature</Option>
+              <Option value="humidity">Humidity</Option>
+              <Option value="atmosphereicPressure">
+                Atmosphereic Pressure
+              </Option>
+              <Option value="soilMoisture">Soil Moisture </Option>
+              <Option value="ec">EC</Option>
+              <Option value="ph">pH</Option>
+              <Option value="nitrogen">Nitrogen</Option>
+              <Option value="phosphorus">Phosphorus</Option>
+              <Option value="potassium">Potassium</Option>
+            </Select>
+            <Form.Item
+              className="username"
+              label="Max"
+              name="max"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter a Value",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Enter Max"
+                value="ababab"
+                style={{ paddingTop: 23.5, paddingBottom: 23.5 }}
+              />
+            </Form.Item>
+            <Form.Item
+              className="username"
+              label="Min"
+              name="min"
+              rules={[
+                {
+                  required: true,
+                  message: "Please Enter a value",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Enter Min"
                 style={{ paddingTop: 23.5, paddingBottom: 23.5 }}
               />
             </Form.Item>
@@ -373,6 +769,29 @@ const Data = () => {
                 </div>
               </Card>
             </div>
+            <div ref={myRef2}>
+              <Card
+                bordered={false}
+                className="criclebox tablespace mb-24"
+                title="Actuators"
+                style={{ marginTop: 50 }}
+              >
+                <div className="table-responsive">
+                  <Descriptions bordered>
+                    <Descriptions.Item span={3} label="Relay 1">
+                      {relay1}
+                    </Descriptions.Item>
+                    <Descriptions.Item span={3} label="Relay 2">
+                      {relay2}
+                    </Descriptions.Item>
+                    <Descriptions.Item span={3} label="Relay 3">
+                      {relay3}
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Message">{msg}</Descriptions.Item>
+                  </Descriptions>
+                </div>
+              </Card>
+            </div>
           </Col>
         </Row>
       </div>
@@ -390,6 +809,7 @@ const Data = () => {
           </Col>
         </Row>
       </div>
+
       <BackTop />
     </>
   );
