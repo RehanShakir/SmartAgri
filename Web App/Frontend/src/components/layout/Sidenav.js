@@ -5,12 +5,18 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import smartAgri from "../../api/smartAgri";
+import { store, useGlobalState } from "state-pool";
 
 function Sidenav({ color }) {
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
   const [dta, setDta] = useState(null);
+  const [re1, setRe1] = useState(null);
   const [uploadList, setUploadList] = useState(true);
+
+  const [handleRe1Data, setHandleR1Data] = useGlobalState("handleRe1");
+  const [handleRe2Data, setHandleR2Data] = useGlobalState("handleRe2");
+  const [handleRe3Data, setHandleR3Data] = useGlobalState("handleRe3");
 
   const uploadFile = () => {
     const data = new FormData();
@@ -79,15 +85,46 @@ function Sidenav({ color }) {
         console.log(err);
       });
   };
-
   const handleRe1 = () => {
     publishToMqtt("relay", "1");
+
+    // localStorage.setItem("relay1Btn","")
+    handleRe1Data();
   };
+
+  // store.setState("relay1", handleRe1Data);
   const handleRe2 = () => {
     publishToMqtt("relay", "2");
+
+    handleRe2Data();
+    // if (relay2On) {
+    //   setRelay2N(true);
+    //   localStorage.setItem(`${localStorage.getItem("macAddress")}Relay2`, "on");
+    //   relay2On = false;
+    // } else {
+    //   localStorage.setItem(
+    //     `${localStorage.getItem("macAddress")}Relay2`,
+    //     "off"
+    //   );
+    //   setRelay2N(false);
+    //   relay2On = true;
+    // }
   };
   const handleRe3 = () => {
     publishToMqtt("relay", "3");
+    handleRe3Data();
+    // if (relay3On) {
+    //   setRelay3N(true);
+    //   localStorage.setItem(`${localStorage.getItem("macAddress")}Relay3`, "on");
+    //   relay3On = false;
+    // } else {
+    //   localStorage.setItem(
+    //     `${localStorage.getItem("macAddress")}Relay3`,
+    //     "off"
+    //   );
+    //   setRelay3N(false);
+    //   relay3On = true;
+    // }
   };
   const onFinish = (values) => {
     console.log(values.settings);
@@ -102,6 +139,7 @@ function Sidenav({ color }) {
 
     return false;
   };
+
   const btnPublish = {
     marginTop: "20px",
     // marginLeft: "0px",
@@ -197,7 +235,7 @@ function Sidenav({ color }) {
             htmlType="submit"
             style={btnPublish}
             // onClick={executeScroll}
-            style={{ marginTop: "0px", borderRadius: "50px", width: "100%" }}
+            // style={{ marginTop: "0px", borderRadius: "50px", width: "100%" }}
           >
             Send Settings
           </Button>

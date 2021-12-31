@@ -4,6 +4,7 @@ import LineChart from "../components/chart/LineChart";
 import "../assets/styles/main.css";
 
 import smartAgri from "../api/smartAgri";
+import { store, useGlobalState } from "state-pool";
 
 import {
   Row,
@@ -19,6 +20,7 @@ import {
   Select,
   Descriptions,
 } from "antd";
+import { BrowserRouter } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -40,6 +42,32 @@ const Data = () => {
   const [relay1, setRelay1] = useState("");
   const [relay2, setRelay2] = useState("");
   const [relay3, setRelay3] = useState("");
+
+  // console.log(relay1N);
+
+  // const relay1N = () =>
+  // {
+
+  // }
+
+  const handleRe1Data = () => {
+    console.log("CLICK FROM DATA btn1");
+    agriData();
+  };
+  const handleRe2Data = () => {
+    console.log("CLICK FROM DATA btn2");
+    agriData();
+  };
+  const handleRe3Data = () => {
+    console.log("CLICK FROM DATA btn3");
+    agriData();
+  };
+
+  store.setState("handleRe1", handleRe1Data);
+  store.setState("handleRe2", handleRe2Data);
+  store.setState("handleRe3", handleRe3Data);
+  // const [handleR1, setHandleR1] = useGlobalState("handleRe1");
+
   const [msg, setMsg] = useState("");
 
   // let intervalId = null;
@@ -89,6 +117,31 @@ const Data = () => {
         console.log(err);
       });
   };
+  // if (relay1N === true && ab === true) {
+  //   console.log("In data realy1n");
+  //   agriData();
+  //   console.log("ab=" + ab);
+  //   ab = false;
+  // } else {
+  //   ab = true;
+  // }
+
+  // if (relay2N) {
+  //   agriData();
+  // }
+  // const re1 = localStorage.getItem(
+  //   `${localStorage.getItem("macAddress")}Relay1`
+  // );
+  // // const checkIfChange = () => {
+  // if (
+  //   localStorage.getItem(`${localStorage.getItem("macAddress")}Relay1`) === "on"
+  // ) {
+  //   setRelay1N("on");
+  // } else {
+  //   setRelay1N("off");
+  // }
+  // };
+
   useEffect(() => {
     if (localStorage.getItem("user-info")) {
       history.push("/tables");
@@ -526,7 +579,18 @@ const Data = () => {
         console.log(err);
       });
   };
+  window.addEventListener("storage", () => console.log("HELLL"));
+  var localStorageSetHandler = function (e) {
+    console.log(
+      'localStorage.set("' + e.key + '", "' + e.value + '") was called'
+    );
+  };
+  // localStorageSetHandler();
 
+  document.removeEventListener("itemInserted", localStorageSetHandler, false);
+  // document.removeEventListener("itemRemoved", localStorageSetHandler, false);
+
+  // console.log(new StorageEvent());
   const handleChangeAlarm = (value) => {
     console.log(value);
     setAlarm(value);

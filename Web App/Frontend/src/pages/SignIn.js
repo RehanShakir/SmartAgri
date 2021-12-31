@@ -2,13 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import smartAgri from "../api/smartAgri";
 import history from "../utils/CreateBrowserHistory";
+import { store, useGlobalState } from "state-pool";
 
 import { Layout, Button, Row, Col, Typography, Form, Input } from "antd";
 import smartFarmingIot from "../assets/images/smartFarmingIot.jpg";
 
 const { Title } = Typography;
 const { Header, Footer, Content } = Layout;
-
+store.setState("handleRe1");
+store.setState("handleRe2");
+store.setState("handleRe3");
 const SignIn = () => {
   const onFinish = async (values) => {
     await smartAgri
