@@ -12,6 +12,7 @@ const { Header, Footer, Content } = Layout;
 store.setState("handleRe1");
 store.setState("handleRe2");
 store.setState("handleRe3");
+store.setState("handleMsg");
 const SignIn = () => {
   const onFinish = async (values) => {
     await smartAgri

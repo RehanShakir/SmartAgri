@@ -62,10 +62,15 @@ const Data = () => {
     console.log("CLICK FROM DATA btn3");
     agriData();
   };
+  const handleMsg = () => {
+    console.log("CLICK FROM DATA Msg");
+    agriData();
+  };
 
   store.setState("handleRe1", handleRe1Data);
   store.setState("handleRe2", handleRe2Data);
   store.setState("handleRe3", handleRe3Data);
+  store.setState("handleMsg", handleMsg);
   // const [handleR1, setHandleR1] = useGlobalState("handleRe1");
 
   const [msg, setMsg] = useState("");

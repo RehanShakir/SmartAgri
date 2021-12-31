@@ -17,6 +17,7 @@ function Sidenav({ color }) {
   const [handleRe1Data, setHandleR1Data] = useGlobalState("handleRe1");
   const [handleRe2Data, setHandleR2Data] = useGlobalState("handleRe2");
   const [handleRe3Data, setHandleR3Data] = useGlobalState("handleRe3");
+  const [handleMsg, setHandleMsg] = useGlobalState("handleMsg");
 
   const uploadFile = () => {
     const data = new FormData();
@@ -127,8 +128,9 @@ function Sidenav({ color }) {
     // }
   };
   const onFinish = (values) => {
-    console.log(values.settings);
+    // console.log(values.settings);
     publishToMqtt("settings", values.settings);
+    handleMsg();
   };
 
   const onFinishFailed = () => {};
